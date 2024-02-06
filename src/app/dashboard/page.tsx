@@ -1,18 +1,27 @@
-import React from 'react'
-import Welcome from '../components/Welcome'
-import TopicCard from '../components/TopicCard'
-import topic from '../components/topics.json'
+"use client";
+import React, { useState } from "react";
+import Welcome from "../components/Welcome";
+import TopicCard from "../components/TopicCard";
+import topic from "../components/topics.json";
+
 export default function page() {
-return (
+  const [topics, setTopics] = useState(topic);
+
+  return (
     <div>
-        <div className='flex gap-4'>
-            {topic.map((topic) => (
-                <TopicCard title={topic.title} description={topic.description} />
-            ))}
-        </div>
-        <div className='mt-8'>
-            <Welcome/>
-        </div>
+      <h1 className="text-2xl font-bold">Recent Topics</h1>
+      <div className="mt-8 flex flex-grow flex-wrap gap-4">
+        {topics?.map((topic) => (
+          <TopicCard
+            key={topic.name}
+            name={topic.name}
+            description={topic.description}
+          />
+        ))}
+      </div>
+      <div className="mt-8">
+        <Welcome />
+      </div>
     </div>
-)
+  );
 }

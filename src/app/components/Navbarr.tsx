@@ -104,7 +104,7 @@ const Navbar = () => {
             <div className="p-4">
               My Topics
               <div className="mt-2">
-                {topics.map((topic, key) => {
+                {topics && topics.map((topic, key) => {
                   return (
                     <a
                       key={key}
@@ -114,7 +114,7 @@ const Navbar = () => {
                       <div>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="icon icon-tabler icon-tabler-library"
+                          className="icon icon-tabler icon-tabler-library"
                           width="18"
                           height="18"
                           viewBox="0 0 24 24"

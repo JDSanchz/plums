@@ -1,15 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import topic from "../components/topics.json";
-interface Topic {
-  name: string;
-  description: string;
-}
+import Topic from "../models/Topic";
 
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
   const [isInput, setIsInput] = useState<Boolean>(false);
-  const [topics, setTopics] = useState<Topic[] | undefined>(topic);
+  const [topics, setTopics] = useState<Topic[]>(topic);
   const [newTopic, setNewTopic] = useState<string>("");
 
   // Adjust visibility based on screen width
@@ -104,7 +101,8 @@ const Navbar = () => {
             <div className="p-4">
               My Topics
               <div className="mt-2">
-                {topics && topics.map((topic, key) => {
+
+                {topics?.map((topic, key) => {
                   return (
                     <a
                       key={key}
@@ -204,7 +202,7 @@ const Navbar = () => {
                 {!isInput && (
                   <a
                     href="#"
-                    className="mt-1 block cursor-pointer p-2 hover:bg-purple-100"
+                    className="mt-1 block cursor-pointer p-2 text-sm hover:bg-purple-100"
                     onClick={() => setIsInput(!isInput)}
                   >
                     + Create New Topic

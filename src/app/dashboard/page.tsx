@@ -11,13 +11,7 @@ export default function page() {
     <div>
       <h1 className="text-2xl font-bold">Recent Topics</h1>
       <div className="mt-8 flex flex-grow flex-wrap gap-4">
-        {topics?.map((topic) => (
-          <TopicCard
-            key={topic.name}
-            name={topic.name}
-            description={topic.description}
-          />
-        ))}
+        {topics?.map((topic) => <TopicCard key={topic.name} topic={topic} />)}
       </div>
       <div className="mt-8">
         <Welcome />

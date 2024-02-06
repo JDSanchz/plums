@@ -1,13 +1,13 @@
 import React from "react";
+import Topic from "../models/Topic";
 
 type TopicCardProps = {
-  name: string;
-  description: string;
+  topic: Topic;
 };
 
-const TopicCard: React.FC<TopicCardProps> = ({ name, description }) => {
+const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
   return (
-    <div className="flex h-fit flex-grow cursor-pointer gap-3 rounded border  shadow-sm md:w-fit">
+    <div className="flex h-fit flex-grow cursor-pointer gap-3 truncate rounded border  shadow-sm md:w-fit">
       <div className="bg-violet-100 p-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ name, description }) => {
           <path d="M11 13h3" />
         </svg>
       </div>
-      <h1 className="text-md my-auto block pr-4">{name}</h1>
+      <h1 className="text-md my-auto block pr-4">{topic.name}</h1>
     </div>
   );
 };

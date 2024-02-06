@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,14 +18,3 @@
 }
 
 
-@media (max-width: 768px) {
-  .mobile-menu.hidden {
-    display: none;
-  }
-}
-
-@media (min-width: 769px) {
-  .desktop-menu {
-    display: block !important; 
-  }
-}

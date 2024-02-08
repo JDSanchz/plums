@@ -13,6 +13,7 @@ export default function page() {
       <div className="mt-8 flex flex-grow flex-wrap gap-4">
         {topics?.map((topic) => <TopicCard key={topic.name} topic={topic} />)}
       </div>
+
       <div className="mt-8">
         <Welcome />
       </div>

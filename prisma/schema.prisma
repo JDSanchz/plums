@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://plums_51u4_user:ZhXkgGMaTvPsfVG5s1SEkzO0btqt065w@dpg-cn1amt0cmk4c73dkjt60-a.oregon-postgres.render.com/plums_51u4"
 }
 
 model Topic {

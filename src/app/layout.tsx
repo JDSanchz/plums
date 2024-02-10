@@ -20,9 +20,9 @@ export default function RootLayout({
       <TopicProvider>
         <body className={inter.className}>
         
-          <div className="flex flex-col md:flex-row h-screen">
+          <div className="flex flex-col md:flex-row h-screen w-screen">
             <Navbar/>
-            <div className="p-8">
+            <div className="p-8 w-full">
               {children}
             </div>
           </div>

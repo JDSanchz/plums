@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../app/components/Navbarr";
-
+import { TopicProvider } from './components/contexts/TopicProvider';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,15 +17,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-      
-        <div className="flex flex-col md:flex-row h-screen">
-          <Navbar/>
-          <div className="p-8">
-            {children}
+      <TopicProvider>
+        <body className={inter.className}>
+        
+          <div className="flex flex-col md:flex-row h-screen">
+            <Navbar/>
+            <div className="p-8">
+              {children}
+            </div>
           </div>
-        </div>
-      </body>
+        </body>
+      </TopicProvider>
     </html>
   );
 }

@@ -23,3 +23,29 @@ export async function GET() {
     });
   }
 }
+
+// Create new Topic
+export async function POST(request: Request) {
+  try {
+    const { title } = await request.json();
+    const newTopic = await prisma.topic.create({
+      data: {
+        title: title,
+      },
+    });
+    return new Response(JSON.stringify(newTopic), {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (e) {
+    console.error("error here"+ e);
+    return new Response(JSON.stringify({ error: "Unable to create topic" }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+}

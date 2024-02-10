@@ -1,6 +1,7 @@
-interface Topic {
-  name: string;
-  description: string;
+// types/Topic.ts
+export interface Topic {
+  id: number;
+  title: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
-export default Topic;

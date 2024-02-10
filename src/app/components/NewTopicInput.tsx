@@ -1,17 +1,19 @@
 'use client'
 import React, { useEffect, useState } from "react";
-
+import { useTopics } from './contexts/TopicProvider';
+import {Topic} from '../models/Topic';
 export default function NewTopicInput(){
     const [isInput, setIsInput] = useState<Boolean>(false);
-    const [newTopic, setNewTopic] = useState<string>("");
+    const [newTopic, setNewTopic] = useState("");
+    const { topics, addTopic } = useTopics();
     return(
         <div>
             {isInput && (
-                <div className="flex items-center justify-between p-2">
+                <div className="flex items-center justify-between">
                 <input
                     type="text"
                     placeholder="Topic Name"
-                    className="w-10/12 rounded border p-1 text-sm"
+                    className="w-[150px] rounded border p-1 text-sm"
                     autoFocus
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setNewTopic(e.target.value)
@@ -19,7 +21,7 @@ export default function NewTopicInput(){
                     onKeyDown={(event) => {
                     if (event.key === "Enter") {
                         // Call your function here
-                        setTopics([...topics, { name: newTopic }]);
+                        addTopic({title: newTopic});
                         setIsInput(!isInput);
                     }
                     }}
@@ -27,13 +29,13 @@ export default function NewTopicInput(){
                 <div
                     className="cursor-pointer rounded p-1 hover:bg-gray-200"
                     onClick={(event) => {
-                    setTopics([...topics, { name: newTopic }]);
+                    addTopic({title: newTopic});
                     setIsInput(!isInput);
                     }}
                 >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="icon icon-tabler icon-tabler-check"
+                    className="icon icon-tabler icon-tabler-check"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
@@ -48,12 +50,12 @@ export default function NewTopicInput(){
                     </svg>
                 </div>
                 <div
-                    className="cursor-pointer rounded p-1 hover:bg-gray-200"
+                    className="cursor-pointer rounded hover:bg-gray-200"
                     onClick={() => setIsInput(!isInput)}
                 >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="icon icon-tabler icon-tabler-x"
+                    className="icon icon-tabler icon-tabler-x"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
@@ -73,7 +75,7 @@ export default function NewTopicInput(){
             {!isInput && (
                 <a
                 href="#"
-                className="mt-1 block cursor-pointer p-2 text-sm hover:bg-purple-100"
+                className="mt-1 block cursor-pointer text-sm hover:bg-purple-100"
                 onClick={() => setIsInput(!isInput)}
                 >
                 + Create New Topic

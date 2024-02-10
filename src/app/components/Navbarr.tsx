@@ -1,13 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Topic from "../models/Topic";
-
+import { useTopics } from './contexts/TopicProvider';
+import topics from "./topics.json";
+import NewTopicInput from "./NewTopicInput";
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
- 
-  const [topics, setTopics] = useState<Topic[]>(topic);
- 
+  
+  // const [topics, setTopics] = useState([]);
+  const {topics, setTopics, addTopic} = useTopics();
 
+ 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
@@ -84,7 +86,7 @@ const Navbar = () => {
       {/* Conditional rendering based on isMenuVisible */}
       {isMenuVisible && (
         <div
-          className={`md:max-w-sidebar flex flex-col ${isMenuVisible ? "desktop-menu" : "mobile-menu hidden"}`}
+          className={`md:w-[230px] flex flex-col ${isMenuVisible ? "desktop-menu" : "mobile-menu hidden"}`}
         >
           {/* Navbar items */}
           <div className="flex flex-col">
@@ -147,13 +149,16 @@ const Navbar = () => {
                           <path d="M11 13h3" />
                         </svg>
                       </div>
-                      <p className="truncate">{topic.name}</p>
+                      <p className="truncate">{topic.title}</p>
                     </a>
                   );
                 })}
 
                 
               </div>
+            </div>
+            <div className="p-4">
+              <NewTopicInput />
             </div>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">
               {/* Quick Notes SVG icon */}

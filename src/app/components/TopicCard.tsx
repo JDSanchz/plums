@@ -1,10 +1,11 @@
 import React from "react";
-import Topic from "../models/Topic";
+import {Topic} from "../models/Topic";
 import { lastAccessed } from "./services/recents";
 
 
 type TopicCardProps = {
   topic: Topic;
+
 };
 
 const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {

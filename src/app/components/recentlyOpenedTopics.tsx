@@ -10,14 +10,14 @@ const [recentTopics, setrecentTopics] = useState<Topic[]>([]); // Fix: Provide t
 
 
 useEffect(() => {
-    setrecentTopics((topics ?? []).sort((a, b) => new Date(a.lastAccessed).getTime() - new Date(b.lastAccessed).getTime()).slice(-3)); // Fix: Use getTime() to compare the dates
+setrecentTopics(topics?.sort((a, b) => new Date(a.lastAccessed) - new Date(b.lastAccessed)).slice(-3)); // Fix: Use getTime() to compare the dates
 }, [topics, count]);
 
 return (
     <div>
         <h1 className="text-2xl font-bold">Recent Topics</h1>
         <div className="mt-8 flex flex-grow flex-wrap gap-4">
-            {recentTopics.map((topic: { title: string }) => (
+            {recentTopics?.map((topic) => (
                 <TopicCard  key={topic.id} topic={topic} />
             ))}
         </div>

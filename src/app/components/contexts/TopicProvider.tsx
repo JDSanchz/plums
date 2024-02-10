@@ -29,7 +29,7 @@ export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [count, setCount] = useState(0);
   
-  const addTopic = async (data: Omit<Topic, 'id'|'createdAt' | 'updatedAt'>) => {
+  const addTopic = async (data: Omit<Topic, 'id'|'createdAt' | 'updatedAt' | 'lastAccessed'>) => {
     try {
   
       const response = await fetch('/api/topics', {

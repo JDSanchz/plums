@@ -1,5 +1,7 @@
 import React from "react";
 import Topic from "../models/Topic";
+import { lastAccessed } from "./services/recents";
+
 
 type TopicCardProps = {
   topic: Topic;
@@ -7,11 +9,14 @@ type TopicCardProps = {
 
 const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
   return (
-    <div className="flex h-fit flex-grow cursor-pointer gap-3 truncate rounded border  shadow-sm md:w-fit">
+    <div onClick={() => {
+      lastAccessed({id: topic.id, lastAccessed: new Date().toISOString()});
+    }}
+    className="flex h-fit flex-grow cursor-pointer gap-3 truncate rounded border  shadow-sm md:w-fit">
       <div className="bg-violet-100 p-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="icon icon-tabler icon-tabler-library"
+          className="icon icon-tabler icon-tabler-library"
           width="24"
           height="24"
           viewBox="0 0 24 24"
@@ -29,7 +34,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
           <path d="M11 13h3" />
         </svg>
       </div>
-      <h1 className="text-md my-auto block pr-4">{topic.name}</h1>
+      <h1 className="text-md my-auto block pr-4">{topic.title}</h1>
     </div>
   );
 };

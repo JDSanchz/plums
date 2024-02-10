@@ -4,4 +4,5 @@ export interface Topic {
   title: string;
   createdAt: Date;
   updatedAt: Date;
+  lastAccessed: Date;
 }

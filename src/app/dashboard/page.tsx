@@ -4,6 +4,7 @@ import Welcome from "../components/Welcome";
 import TopicCard from "../components/TopicCard";
 import topic from "../components/topics.json";
 import NewTopicInput from "../components/NewTopicInput";
+import RecentlyOpenedTopics from "../components/recentlyOpenedTopics";
 
 
 export default function page() {
@@ -15,11 +16,10 @@ export default function page() {
         <div className="block md:hidden">
           <NewTopicInput />
         </div>
-        <h1 className="text-2xl font-bold">Recent Topics</h1>
         <div className="mt-8 flex flex-grow flex-wrap gap-4">
-          {topics?.map((topic) => <TopicCard key={topic.name} topic={topic} />)}
+          <RecentlyOpenedTopics />
+          {/* {topics?.map((topic) => <TopicCard key={topic.name} topic={topic} />)} */}
         </div>
-
         <div className="mt-8">
           <Welcome />
         </div>

@@ -7,6 +7,8 @@ interface TopicContextType {
   topics: Topic[];
   setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
   addTopic: (topicData: { title: string }) => Promise<void>;
+  count: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const TopicContext = createContext<TopicContextType | undefined>(undefined);
@@ -25,7 +27,8 @@ interface TopicProviderProps {
 
 export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
-
+  const [count, setCount] = useState(0);
+  
   const addTopic = async (data: Omit<Topic, 'id'|'createdAt' | 'updatedAt'>) => {
     try {
   
@@ -53,7 +56,7 @@ export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
   
 
   return (
-    <TopicContext.Provider value={{ topics, setTopics, addTopic }}>
+    <TopicContext.Provider value={{ topics, setTopics, addTopic, count, setCount }}>
       {children}
     </TopicContext.Provider>
   );

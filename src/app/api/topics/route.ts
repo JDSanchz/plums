@@ -49,3 +49,28 @@ export async function POST(request: Request) {
     });
   }
 }
+
+// Date last accessed for a topic
+export async function PUT(request: Request) {
+  try {
+    const { id, lastAccessed } = await request.json();
+    const updatedTopic = await prisma.topic.update({
+      where: {
+        id: id,
+      },
+      data: {
+        lastAccessed: lastAccessed,
+      },
+    });
+    return new Response(JSON.stringify(updatedTopic), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (e) {
+    console.error("error here"+ e);
+    return new Response(JSON.stringify({ error: "Unable to update topic" }), {
+      status: 500,
+});
+  }}

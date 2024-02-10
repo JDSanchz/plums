@@ -3,15 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useTopics } from './contexts/TopicProvider';
 import topics from "./topics.json";
 import NewTopicInput from "./NewTopicInput";
+import { usePathname } from 'next/navigation'
+
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
   
-  // const [topics, setTopics] = useState([]);
-  const {topics, setTopics, addTopic} = useTopics();
 
- 
+  const {topics, setTopics, addTopic} = useTopics();
+  const pathname = usePathname()
+
   useEffect(() => {
     const fetchTopics = async () => {
+      setTopics(undefined);
       try {
         const response = await fetch('/api/topics');
         if (!response.ok) {
@@ -54,7 +57,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-100 text-gray-900 ">
+    <div className={`flex flex-col bg-gray-100 text-gray-900 ${pathname==="/"?"hidden":""}`}>
       <div className="flex items-center bg-purple-600 p-4 text-white">
         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
           R
@@ -119,6 +122,14 @@ const Navbar = () => {
             {/* Expandable Topics section */}
             <div className="p-4">
               My Topics
+              { topics === undefined &&
+                <div role="status" className="max-w-sm animate-pulse">
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              }
               <div className="mt-2">
 
                 {topics?.map((topic, key) => {
@@ -162,23 +173,7 @@ const Navbar = () => {
             </div>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">
               {/* Quick Notes SVG icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-circle-plus mr-2"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                <path d="M9 12h6" />
-                <path d="M12 9v6" />
-              </svg>
+             
               Quick Notes
             </a>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">

@@ -6,10 +6,11 @@ export default function NewTopicInput(){
     const [isInput, setIsInput] = useState<Boolean>(false);
     const [newTopic, setNewTopic] = useState("");
     const { topics, addTopic } = useTopics();
+    
     return(
-        <div>
+        <div className="p-2">
             {isInput && (
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                 <input
                     type="text"
                     placeholder="Topic Name"
@@ -20,17 +21,24 @@ export default function NewTopicInput(){
                     }
                     onKeyDown={(event) => {
                     if (event.key === "Enter") {
-                        // Call your function here
-                        addTopic({title: newTopic});
-                        setIsInput(!isInput);
+                        if(newTopic !== ""){
+                            addTopic({title: newTopic});
+                            setIsInput(!isInput);
+                        } else {
+                            window.alert("Please enter a topic name");
+                        }
                     }
                     }}
                 />
                 <div
                     className="cursor-pointer rounded p-1 hover:bg-gray-200"
                     onClick={(event) => {
-                    addTopic({title: newTopic});
-                    setIsInput(!isInput);
+                        if(newTopic !== ""){
+                            addTopic({title: newTopic});
+                            setIsInput(!isInput);
+                        } else {
+                            window.alert("Please enter a topic name");
+                        }
                     }}
                 >
                     <svg
@@ -50,7 +58,7 @@ export default function NewTopicInput(){
                     </svg>
                 </div>
                 <div
-                    className="cursor-pointer rounded hover:bg-gray-200"
+                    className="cursor-pointer rounded p-1 hover:bg-gray-200"
                     onClick={() => setIsInput(!isInput)}
                 >
                     <svg
@@ -75,10 +83,12 @@ export default function NewTopicInput(){
             {!isInput && (
                 <a
                 href="#"
-                className="mt-1 block cursor-pointer text-sm hover:bg-purple-100"
+                className="mt-1 flex gap-2 items-center cursor-pointer text-sm hover:underline"
                 onClick={() => setIsInput(!isInput)}
                 >
-                + Create New Topic
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12h6" /><path d="M12 9v6" /></svg>
+                </span>Create New Topic
                 </a>
             )}
         </div>

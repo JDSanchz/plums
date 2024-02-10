@@ -4,7 +4,7 @@ import React, { createContext, useContext, ReactNode, useState } from 'react';
 import { Topic } from '../../models/Topic';
 
 interface TopicContextType {
-  topics: Topic[];
+  topics: undefined | Topic[];
   setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
   addTopic: (topicData: { title: string }) => Promise<void>;
 }

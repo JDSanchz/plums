@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import topic from "../components/topics.json";
 import Topic from "../models/Topic";
 
 const Navbar = () => {
@@ -8,6 +7,24 @@ const Navbar = () => {
  
   const [topics, setTopics] = useState<Topic[]>(topic);
  
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const response = await fetch('/api/topics');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setTopics(data);
+      } catch (error) {
+        console.error('Failed to fetch topics:', error);
+      }
+    };
+
+    fetchTopics();
+  }, []);
+
 
   // Adjust visibility based on screen width
   useEffect(() => {

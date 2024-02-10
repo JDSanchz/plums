@@ -10,7 +10,7 @@ const [recentTopics, setrecentTopics] = useState<Topic[]>([]); // Fix: Provide t
 
 
 useEffect(() => {
-setrecentTopics(topics.sort((a, b) => new Date(a.lastAccessed) - new Date(b.lastAccessed)).slice(-3)); // Fix: Use getTime() to compare the dates
+    setrecentTopics((topics ?? []).sort((a, b) => new Date(a.lastAccessed).getTime() - new Date(b.lastAccessed).getTime()).slice(-3)); // Fix: Use getTime() to compare the dates
 }, [topics, count]);
 
 return (

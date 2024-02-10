@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTopics } from './contexts/TopicProvider';
-import topics from "./topics.json";
 import NewTopicInput from "./NewTopicInput";
 import { usePathname } from 'next/navigation'
 
+import { lastAccessed } from "./services/recents";
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
   
+  const pathname = usePathname();
+  
+  // const [topics, setTopics] = useState([]);
+  const {topics, setTopics, addTopic, count, setCount} = useTopics();
 
-  const {topics, setTopics, addTopic} = useTopics();
-  const pathname = usePathname()
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -28,7 +30,7 @@ const Navbar = () => {
     };
 
     fetchTopics();
-  }, []);
+  }, [count]);
 
 
   // Adjust visibility based on screen width
@@ -131,13 +133,16 @@ const Navbar = () => {
                 </div>
               }
               <div className="mt-2">
-
                 {topics?.map((topic, key) => {
                   return (
                     <a
                       key={key}
                       href="#"
                       className="mt-1 block  flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100"
+                      onClick={() => {
+                        lastAccessed({id: topic.id, lastAccessed: new Date().toISOString()});
+                        setCount(count + 1);
+                      }}
                     >
                       <div>
                         <svg

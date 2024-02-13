@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-
+import data from "./data.json";
 import ExampleTheme from "./ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
@@ -60,7 +60,7 @@ function MyOnChangePlugin({ onChange }) {
   }, [editor, onChange]);
   return null;
 }
-
+const initialData = JSON.stringify(data);
 const value = '{"root":{"children":[{"children":[{"detail":0,"format":1,"mode":"normal","style":"","text":"hello world!!!","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 const editorConfig = {
   // The editor theme
@@ -83,20 +83,24 @@ const editorConfig = {
     AutoLinkNode,
     LinkNode
   ],
-  editorState:value
+  editorState:initialData
 };
-import data from './data.json'
+
 export default function Editor() {
       
   const [editorState, setEditorState] = useState();
+
+  console.log(editorState)
   function onChange(editorState) {
       // Call toJSON on the EditorState object, which produces a serialization safe string
       const editorStateJSON = editorState.toJSON();
       // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
       setEditorState(JSON.stringify(editorStateJSON));
+     
   }
 
   const editmode = false
+   
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container"> 

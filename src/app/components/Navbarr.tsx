@@ -59,7 +59,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className={`flex flex-col bg-gray-100 text-gray-900 ${pathname==="/"?"hidden":""}`}>
+    <div className={`w-full md:w-[310px] flex flex-col bg-gray-100 text-gray-900 ${pathname==="/"?"hidden":""}`}>
       <div className="flex items-center bg-purple-600 p-4 text-white">
         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
           R
@@ -91,53 +91,34 @@ const Navbar = () => {
       {/* Conditional rendering based on isMenuVisible */}
       {isMenuVisible && (
         <div
-          className={`md:w-[230px] flex flex-col ${isMenuVisible ? "desktop-menu" : "mobile-menu hidden"}`}
+          className={`flex flex-col ${isMenuVisible ? "desktop-menu" : "mobile-menu hidden"}`}
         >
           {/* Navbar items */}
-          <div className="flex flex-col">
-            <a href="#" className="flex items-center p-4 hover:bg-gray-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-address-book mr-2"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M20 6v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2z" />
-                <path d="M10 16h6" />
-                <path d="M13 11m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                <path d="M4 8h3" />
-                <path d="M4 12h3" />
-                <path d="M4 16h3" />
-              </svg>
-              Create new note
+          <div className="flex flex-col w-full">
+            <a href="/dashboard" className="flex items-center p-4 hover:bg-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler mr-2 icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+              Home
             </a>
-            <a href="#" className="p-4 hover:bg-gray-200">
+            {/* <a href="#" className="p-4 hover:bg-gray-200">
               New Note
-            </a>
+            </a> */}
             {/* Expandable Topics section */}
-            <div className="p-4">
-              My Topics
+            <div className="p-4 pe-0">
+              <p className="font-semibold"> My Topics</p>
               { topics === undefined &&
-                <div role="status" className="max-w-sm animate-pulse">
+                <div role="status" className="max-w-sm animate-pulse mt-6">
                   <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
                   <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
                   <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
                   <span className="sr-only">Loading...</span>
                 </div>
               }
-              <div className="mt-2">
+              <div className="mt-2 max-h-60 overflow-auto">
                 {topics?.map((topic, key) => {
                   return (
                     <a
                       key={key}
-                      href="#"
+                      href={`/topic/${topic.id}`}
                       className="mt-1 block  flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100"
                       onClick={() => {
                         lastAccessed({id: topic.id, lastAccessed: new Date().toISOString()});
@@ -173,7 +154,7 @@ const Navbar = () => {
                 
               </div>
             </div>
-            <div className="p-4">
+            <div className="py-0 pl-4">
               <NewTopicInput />
             </div>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">

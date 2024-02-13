@@ -7,6 +7,24 @@ export default function NewTopicInput(){
     const [newTopic, setNewTopic] = useState("");
     const { topics, addTopic } = useTopics();
     
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+        // Check for Ctrl + K
+        if (event.ctrlKey && event.key === 'k') {
+            event.preventDefault(); // Prevent the default action of Ctrl + K
+            setIsInput(!isInput); // Toggle the isInput state
+        }
+        };
+        setNewTopic("");
+        // Attach the event listener to the document
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isInput]);
+
     return(
         <div className="p-2">
             {isInput && (
@@ -28,6 +46,11 @@ export default function NewTopicInput(){
                             window.alert("Please enter a topic name");
                         }
                     }
+                    // Handle Ctrl + K
+                        if (event.key === 'Escape') {
+                            event.preventDefault(); // Prevent the default action of Ctrl + K
+                            setIsInput(!isInput); // Toggle the isInput state
+                        }
                     }}
                 />
                 <div

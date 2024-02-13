@@ -11,9 +11,18 @@ datasource db {
 }
 
 model Topic {
-    id        String   @id @default(uuid())
-    title     String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id           String   @id @default(uuid())
+    title        String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
     lastAccessed DateTime @default(now())
+    Images       Images[]
+}
+
+model Images {
+  id        String      @id @default(uuid())
+  title     String 
+  createdAt DateTime    @default(now())
+  topicId     String      @map("topic_id") // Foreign key referencing the Topic model
+  topic       Topic       @relation(fields: [topicId], references: [id])
 }

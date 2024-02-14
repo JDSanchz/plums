@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const topics = await prisma.topic.findMany();
-    console.log(topics); // Logs to the server's console
+
     return new Response(JSON.stringify(topics), {
       status: 200,
       headers: {

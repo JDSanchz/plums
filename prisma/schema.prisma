@@ -31,7 +31,7 @@ model Images {
 model Notes {
   id      String @id @default(uuid())
   title   String
-  data    String
+  content    String
   topicId String @map("topic_id") // Foreign key referencing the Topic model
   topic   Topic  @relation(fields: [topicId], references: [id])
 }

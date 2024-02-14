@@ -8,7 +8,7 @@ export default function NewTopicInput() {
   const { topics, addTopic } = useTopics();
 
   useEffect(() => {
-    const handleKeyDown = (event:any) => {
+    const handleKeyDown = (event: any) => {
       // Check for Ctrl + K
       if (event.ctrlKey && event.key === "k") {
         event.preventDefault(); // Prevent the default action of Ctrl + K

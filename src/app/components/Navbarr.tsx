@@ -122,7 +122,7 @@ const Navbar = () => {
               New Note
             </a> */}
             {/* Expandable Topics section */}
-            <div className="p-4 pe-0">
+            <div className="p-4">
               <p className="font-semibold"> My Topics</p>
               {topics === undefined && (
                 <div role="status" className="max-w-sm animate-pulse mt-6">

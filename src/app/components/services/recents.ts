@@ -1,7 +1,6 @@
 import { Topic } from "../../models/Topic";
 
 export const lastAccessed = async (data: Topic) => {
-  console.log(data);
   try {
     const response = await fetch("/api/topics", {
       method: "PUT",

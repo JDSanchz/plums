@@ -1,5 +1,5 @@
 // app/api/topics.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ export async function GET() {
     return new Response(JSON.stringify(topics), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
@@ -18,7 +18,7 @@ export async function GET() {
     return new Response(JSON.stringify({ error: "Unable to fetch topics" }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   }
@@ -36,15 +36,15 @@ export async function POST(request: Request) {
     return new Response(JSON.stringify(newTopic), {
       status: 201,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
-    console.error("error here"+ e);
+    console.error("error here" + e);
     return new Response(JSON.stringify({ error: "Unable to create topic" }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   }
@@ -65,12 +65,13 @@ export async function PUT(request: Request) {
     return new Response(JSON.stringify(updatedTopic), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
-    console.error("error here"+ e);
+    console.error("error here" + e);
     return new Response(JSON.stringify({ error: "Unable to update topic" }), {
       status: 500,
-});
-  }}
+    });
+  }
+}

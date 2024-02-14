@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       maxWidth: {
-        'sidebar': '250px', // This will create a class `max-w-sidebar`
+        sidebar: "250px", // This will create a class `max-w-sidebar`
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -21,6 +21,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-
-
-

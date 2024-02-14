@@ -11,18 +11,27 @@ datasource db {
 }
 
 model Topic {
-    id           String   @id @default(uuid())
-    title        String
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
-    lastAccessed DateTime @default(now())
-    Images       Images[]
+  id           String   @id @default(uuid())
+  title        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastAccessed DateTime @default(now())
+  Images       Images[]
+  Notes        Notes[]
 }
 
 model Images {
-  id        String      @id @default(uuid())
-  title     String 
-  createdAt DateTime    @default(now())
-  topicId     String      @map("topic_id") // Foreign key referencing the Topic model
-  topic       Topic       @relation(fields: [topicId], references: [id])
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  topicId   String   @map("topic_id") // Foreign key referencing the Topic model
+  topic     Topic    @relation(fields: [topicId], references: [id])
+}
+
+model Notes {
+  id      String @id @default(uuid())
+  title   String
+  data    String
+  topicId String @map("topic_id") // Foreign key referencing the Topic model
+  topic   Topic  @relation(fields: [topicId], references: [id])
 }

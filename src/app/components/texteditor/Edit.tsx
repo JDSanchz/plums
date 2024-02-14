@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import data from "./data.json";
 import ExampleTheme from "./ExampleTheme";
@@ -17,7 +17,7 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
 
@@ -44,7 +44,6 @@ function MyCustomAutoFocusPlugin() {
   return null;
 }
 
-
 // When the editor changes, you can get notified via the
 // OnChangePlugin!
 function MyOnChangePlugin({ onChange }) {
@@ -53,7 +52,7 @@ function MyOnChangePlugin({ onChange }) {
   // Wrap our listener in useEffect to handle the teardown and avoid stale references.
   useEffect(() => {
     // most listeners return a teardown function that can be called to clean them up.
-    return editor.registerUpdateListener(({editorState}) => {
+    return editor.registerUpdateListener(({ editorState }) => {
       // call onChange here to pass the latest state up to the parent.
       onChange(editorState);
     });
@@ -61,7 +60,8 @@ function MyOnChangePlugin({ onChange }) {
   return null;
 }
 const initialData = JSON.stringify(data);
-const value = '{"root":{"children":[{"children":[{"detail":0,"format":1,"mode":"normal","style":"","text":"hello world!!!","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+const value =
+  '{"root":{"children":[{"children":[{"detail":0,"format":1,"mode":"normal","style":"","text":"hello world!!!","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 const editorConfig = {
   // The editor theme
   theme: ExampleTheme,
@@ -81,39 +81,36 @@ const editorConfig = {
     TableCellNode,
     TableRowNode,
     AutoLinkNode,
-    LinkNode
+    LinkNode,
   ],
-  editorState:initialData
+  editorState: initialData,
 };
 
 export default function Editor() {
-      
   const [editorState, setEditorState] = useState();
 
-  console.log(editorState)
+  console.log(editorState);
   function onChange(editorState) {
-      // Call toJSON on the EditorState object, which produces a serialization safe string
-      const editorStateJSON = editorState.toJSON();
-      // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
-      setEditorState(JSON.stringify(editorStateJSON));
-     
+    // Call toJSON on the EditorState object, which produces a serialization safe string
+    const editorStateJSON = editorState.toJSON();
+    // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
+    setEditorState(JSON.stringify(editorStateJSON));
   }
 
-  const editmode = false
-   
+  const editmode = false;
+
   return (
     <LexicalComposer initialConfig={editorConfig}>
-      <div className="editor-container"> 
+      <div className="editor-container">
         <ToolbarPlugin />
         <div className="editor-inner">
           <RichTextPlugin
-            contentEditable={<ContentEditable className="editor-input"  />}
+            contentEditable={<ContentEditable className="editor-input" />}
             placeholder={<Placeholder />}
             ErrorBoundary={LexicalErrorBoundary}
-       
           />
           <HistoryPlugin />
-          <MyOnChangePlugin onChange={onChange}/>
+          <MyOnChangePlugin onChange={onChange} />
           {/* <TreeViewPlugin /> */}
           <AutoFocusPlugin />
           <CodeHighlightPlugin />

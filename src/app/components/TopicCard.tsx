@@ -1,19 +1,19 @@
 import React from "react";
-import {Topic} from "../models/Topic";
+import { Topic } from "../models/Topic";
 import { lastAccessed } from "./services/recents";
-
 
 type TopicCardProps = {
   topic: Topic;
-
 };
 
 const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
   return (
-    <div onClick={() => {
-      lastAccessed({id: topic.id, lastAccessed: new Date().toISOString()});
-    }}
-    className="flex h-fit flex-grow cursor-pointer gap-3 truncate rounded border  shadow-sm md:w-fit">
+    <div
+      onClick={() => {
+        lastAccessed({ id: topic.id, lastAccessed: new Date().toISOString() });
+      }}
+      className="flex h-fit flex-grow cursor-pointer gap-3 truncate rounded border  shadow-sm md:w-fit"
+    >
       <div className="bg-violet-100 p-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"

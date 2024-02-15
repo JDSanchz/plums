@@ -45,3 +45,47 @@ export async function POST(request: Request) {
     });
   }
 }
+
+export async function GET(request: Request) {
+  // Extract query parameters from the request URL
+  const url = new URL(request.url);
+  const topicId = url.searchParams.get("topicId");
+
+  // Validate that topicId is provided
+  if (!topicId) {
+    return new Response(
+      JSON.stringify({ error: "topicId query parameter is required" }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  }
+
+  try {
+    // Fetch all links associated with the topicId
+    const links = await prisma.links.findMany({
+      where: {
+        topicId: topicId,
+      },
+    });
+
+    // Return the fetched links
+    return new Response(JSON.stringify(links), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (e) {
+    console.error("Error fetching links: ", e);
+    return new Response(JSON.stringify({ error: "Unable to fetch links" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}

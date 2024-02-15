@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="mt-8 w-full flex flex-col items-center justify-center text-center">
       <Head>
-        <title>PLMS - Personal Learning Management System</title>
+        <title>PLUMS - Personal Learning Management System</title>
         <meta name="description" content="Manage your learning with PLMS" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

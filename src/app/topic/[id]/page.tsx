@@ -5,7 +5,7 @@ import topic from "../../components/topics.json";
 import NewLinkForm from "@/app/components/links/LinkForm";
 import { useState } from "react";
 import Notes from "@/app/components/Notes";
-import UploadImage from "@/app/components/UploadImage";
+import UploadImage from "@/app/components/images/UploadImage";
 export default function page() {
   return (
     <div>

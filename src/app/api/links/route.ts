@@ -1,31 +1,34 @@
-// app/api/links.ts
+// app/api/links/route.ts
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Adjusted to match your updated Links model
 export async function POST(request: Request) {
   try {
-    const { title, url, previewImg, topicId } = await request.json();
+    const { title, url, desc, topicId } = await request.json();
 
-    // Check if topicId is provided
-    if (!topicId) {
-      return new Response(JSON.stringify({ error: "topicId is required" }), {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
+    // Check if all required fields are provided
+    if (!title || !url || !desc || !topicId) {
+      return new Response(
+        JSON.stringify({ error: "All fields are required" }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
     }
 
     const newLink = await prisma.links.create({
       data: {
         title,
         url,
-        previewImg, // This is still optional.
-        topicId, // Now ensuring it's provided.
+        desc,
+        topicId,
       },
     });
+
     return new Response(JSON.stringify(newLink), {
       status: 201,
       headers: {
@@ -33,7 +36,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (e) {
-    console.error("error here" + e);
+    console.error("Error here: " + e);
     return new Response(JSON.stringify({ error: "Unable to create link" }), {
       status: 500,
       headers: {

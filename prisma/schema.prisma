@@ -44,7 +44,7 @@ model Links {
   id         String   @id @default(uuid())
   title      String
   url        String
-  previewImg String?  @map("preview_img") //Foreign
+  desc       String
   topicId String @map("topic_id") // Foreign key referencing the Topic model
   topic   Topic  @relation(fields: [topicId], references: [id])
 }

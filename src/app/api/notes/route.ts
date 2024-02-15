@@ -68,3 +68,41 @@ export async function POST(request: Request) {
     });
   }
 }
+
+// Get a single note
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const noteId = url.searchParams.get("noteId");
+
+    if (!noteId) {
+      return new Response(JSON.stringify({ error: "Note ID is required" }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const note = await prisma.notes.findUnique({
+      where: {
+        id: noteId,
+      },
+    });
+
+    return new Response(JSON.stringify(note), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return new Response(JSON.stringify({ error: "Unable to fetch Note" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}

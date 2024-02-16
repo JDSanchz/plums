@@ -6,7 +6,7 @@ import NewLinkForm from "@/app/components/links/LinkForm";
 import { useState } from "react";
 import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
-import UploadImage from "@/app/components/images/UploadImage";
+import ImageForm from "@/app/components/images/ImageForm";
 export default function page() {
   return (
     <div>
@@ -14,7 +14,7 @@ export default function page() {
       <Notes />
       <AllTopicLinks />
       <NewLinkForm/>
-      <UploadImage/>
+      <ImageForm/>
     </div>
   );
 }

@@ -1,4 +1,6 @@
 'use client';
+import React, { useState } from 'react';
+import { useParams } from 'next/navigation';
 
 
 export default function ImageForm () {

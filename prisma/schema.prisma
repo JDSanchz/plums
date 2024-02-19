@@ -18,6 +18,10 @@ model Topic {
   lastAccessed DateTime @default(now())
   Images       Images[]
   Notes        Notes[]
+  Links        Links[]
+  parentId     String?  @map("parent_id") 
+  parent       Topic?   @relation("TopicToTopic", fields: [parentId], references: [id]) 
+  children     Topic[]  @relation("TopicToTopic") 
 }
 
 model Images {
@@ -32,6 +36,15 @@ model Notes {
   id      String @id @default(uuid())
   title   String
   content    String
+  topicId String @map("topic_id") // Foreign key referencing the Topic model
+  topic   Topic  @relation(fields: [topicId], references: [id])
+}
+
+model Links {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  desc       String
   topicId String @map("topic_id") // Foreign key referencing the Topic model
   topic   Topic  @relation(fields: [topicId], references: [id])
 }

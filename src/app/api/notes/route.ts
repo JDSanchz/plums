@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   }
 }
 
-// Get a single note
+// // Get a single note
 // export async function GET(request: Request) {
 //   try {
 //     const url = new URL(request.url);

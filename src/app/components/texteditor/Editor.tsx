@@ -65,9 +65,10 @@ const initialData = JSON.stringify(data);
 interface EditorProps {
   isEditMode: boolean;
   content?: string;
+  setContentNote?: (note: string) => void;
 }
 
-export default function Editor({ isEditMode, content }: EditorProps) {
+export default function Editor({ isEditMode, content, setContentNote }: EditorProps) {
   const [editorState, setEditorState] = useState<string>();
 
   const editorConfig = {
@@ -99,16 +100,21 @@ export default function Editor({ isEditMode, content }: EditorProps) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
     // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
+    console.log(content)
     setEditorState(JSON.stringify(editorStateJSON));
-  }
+    // if(setContentNote) {
+    //   setContentNote(JSON.stringify(editorStateJSON))
+    // }
 
-  const editmode = false;
+  }
+   
+  
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container">
         {isEditMode && <ToolbarPlugin />}
-        <div className="editor-inner">
+        <div className="editor-inner max-h-[600px] overflow-y-auto">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
             placeholder={<Placeholder />}

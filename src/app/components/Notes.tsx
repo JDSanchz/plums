@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Editor from "./texteditor/Editor";
-import NewNote from "./NewNote";
+import NewNote from "./texteditor/NewNote";
 
 interface Note {
   id: string;
@@ -17,6 +17,8 @@ export default function Notes() {
   const [noteData, setNoteData] = useState<Note>();
   const [noteId, setNoteId] = useState();
 
+  const [refreshNotes, setRefreshNotes] = useState(false);
+ 
   const params = useParams();
   useEffect(() => {
     const fetchNotes = async () => {
@@ -38,7 +40,7 @@ export default function Notes() {
     };
 
     fetchNotes();
-  }, []);
+  }, [refreshNotes]);
 
   useEffect(()=>{
     const fetchNotes = async () => {
@@ -54,7 +56,7 @@ export default function Notes() {
         }
         const data = await response.json();
         setNoteData(data);
-        console.log(noteData)
+   
       } catch (error) {
         console.error("Failed to fetch topics:", error);
       }
@@ -64,14 +66,15 @@ export default function Notes() {
 
   // console.log(noteData)
   return (
-    <div className="flex flex-col md:flex-row gap-8">
+    <div className="flex flex-col flex-wrap md:flex-row gap-8">
   
 
       <div className="flex flex-wrap flex-col gap-4">
+        <div className="max-h-[300px] flex flex-col gap-4 py-3 px-2 overflow-y-auto">
         {notes.map((note) => {
           return (
             
-            <a onClick={() => setNoteId(note.id)} className="cursor-pointer w-[300px]">
+            <a onClick={() => {setNoteId(note.id)}} className="cursor-pointer w-[300px] border border-slate-100 rounded">
               <div className="shadow flex p-4 gap-4 rounded">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,14 +99,15 @@ export default function Notes() {
             </a>
           );
         })}
+        </div>
         <button className="btn-primary" onClick={()=>setNewNote(true)}>New Note</button>
       </div>
-      {newNote && <NewNote setNewNote={setNewNote} newNote={newNote} />}
+      {newNote && <NewNote setNewNote={setNewNote} newNote={newNote} onNoteAdded={() => {setRefreshNotes(prev => !prev); setNewNote(!newNote)}}/>}
       {noteData && 
         !newNote &&
         <div>
           <h1 className="text-3xl font-bold mb-6">{noteData?.title}</h1>
-          <Editor content={noteData?.content} isEditMode={false} />
+          <Editor content={noteData.content} isEditMode={false} />
         </div>
       }
     </div>

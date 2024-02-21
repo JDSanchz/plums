@@ -26,6 +26,9 @@ import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
 
+
+import { useParams } from "next/navigation";
+
 function Placeholder() {
   return <div className="editor-placeholder">Write something...</div>;
 }
@@ -61,16 +64,16 @@ function MyOnChangePlugin({ onChange }) {
   return null;
 }
 const initialData = JSON.stringify(data);
-
 interface EditorProps {
-  isEditMode: boolean;
-  content?: string;
-  setContentNote?: (note: string) => void;
+  setNewNote: any;
+  newNote: boolean;
+  onNoteAdded: any;
 }
 
-export default function Editor({ isEditMode, content, setContentNote }: EditorProps) {
-  const [editorState, setEditorState] = useState<string>();
 
+export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) {
+  const [editorState, setEditorState] = useState<string>();
+  const [title, setTitle] = useState('');
   const editorConfig = {
     // The editor theme
     theme: ExampleTheme,
@@ -92,15 +95,46 @@ export default function Editor({ isEditMode, content, setContentNote }: EditorPr
       AutoLinkNode,
       LinkNode,
     ],
-    editorState: content,
-    editable: isEditMode,
+    // editorState: content,
+    editable: true,
   };
+  const params = useParams();
+
+  // save note
+  async function saveNote(e) {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/notes/note`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: title, content: editorState, topicId: params.id }),
+      });
+
+      if (response.ok) {
+        onNoteAdded();
+      }
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      // setNoteData(data);
+    } catch (error) {
+      console.error("Failed to fetch topics:", error);
+    }
+  }
 
   function onChange(editorState) {
+
+    
+
+
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
     // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
-    console.log(content)
+    
     setEditorState(JSON.stringify(editorStateJSON));
     // if(setContentNote) {
     //   setContentNote(JSON.stringify(editorStateJSON))
@@ -111,27 +145,36 @@ export default function Editor({ isEditMode, content, setContentNote }: EditorPr
   
 
   return (
-    <LexicalComposer initialConfig={editorConfig}>
-      <div className="editor-container">
-        {isEditMode && <ToolbarPlugin />}
-        <div className="editor-inner max-h-[600px] max-w-[800px] min-w-[600px] overflow-y-auto">
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={<Placeholder />}
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <HistoryPlugin />
-          <MyOnChangePlugin onChange={onChange} />
-          {/* <TreeViewPlugin /> */}
-          <AutoFocusPlugin />
-          <CodeHighlightPlugin />
-          <ListPlugin />
-          <LinkPlugin />
-          <AutoLinkPlugin />
-          <ListMaxIndentLevelPlugin maxDepth={7} />
-          <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+    <div>
+      <h2 className="text-xs">Note Title</h2>
+      <input type="text" className="border-slate-200 mb-4 rounded text-sm" onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setTitle(e.target.value)}/>
+      <LexicalComposer initialConfig={editorConfig}>
+    
+        <div className="editor-container">
+          <ToolbarPlugin />
+          <div className="editor-inner max-h-[600px] overflow-y-auto">
+            <RichTextPlugin
+              contentEditable={<ContentEditable className="editor-input" />}
+              placeholder={<Placeholder />}
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <HistoryPlugin />
+            <MyOnChangePlugin onChange={onChange} />
+            {/* <TreeViewPlugin /> */}
+            <AutoFocusPlugin />
+            <CodeHighlightPlugin />
+            <ListPlugin />
+            <LinkPlugin />
+            <AutoLinkPlugin />
+            <ListMaxIndentLevelPlugin maxDepth={7} />
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+          </div>
         </div>
+      </LexicalComposer>
+      <div className="flex gap-4">
+        <button className="btn-primary" onClick={(e)=>saveNote(e)}>Save Note</button>
+        <button className="btn-cancel" onClick={()=>setNewNote(false)}>Cancel</button>
       </div>
-    </LexicalComposer>
+    </div>
   );
 }

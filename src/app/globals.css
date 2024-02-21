@@ -19,3 +19,12 @@
 .navbar {
   width: 310px;
 }
+
+.btn-primary {
+  padding: 10px;
+  @apply rounded bg-purple-500 text-white mt-4 text-sm;
+}
+.btn-cancel {
+  padding: 10px;
+  @apply rounded bg-red-100 text-red-600 mt-4 text-sm;
+}

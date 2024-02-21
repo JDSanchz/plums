@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Editor from "./texteditor/Editor";
+import NewNote from "./texteditor/NewNote";
 
 interface Note {
   id: string;
@@ -12,7 +13,12 @@ interface Note {
 
 export default function Notes() {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [newNote, setNewNote] = useState(false);
+  const [noteData, setNoteData] = useState<Note>();
+  const [noteId, setNoteId] = useState();
 
+  const [refreshNotes, setRefreshNotes] = useState(false);
+ 
   const params = useParams();
   useEffect(() => {
     const fetchNotes = async () => {
@@ -34,23 +40,47 @@ export default function Notes() {
     };
 
     fetchNotes();
-  }, []);
+  }, [refreshNotes]);
 
-  console.log(notes);
+  useEffect(()=>{
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch(`/api/notes/note?noteId=${noteId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setNoteData(data);
+   
+      } catch (error) {
+        console.error("Failed to fetch topics:", error);
+      }
+    };
+    fetchNotes();
+  }, [noteId]);
+
+  // console.log(noteData)
   return (
-    <div>
-      <p>Notes</p>
+    <div className="flex flex-col flex-wrap md:flex-row gap-8">
+  
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap flex-col gap-4">
+        <div className="max-h-[300px] flex flex-col gap-4 py-3 px-2 overflow-y-auto">
         {notes.map((note) => {
           return (
-            <a href={`/note/${note.id}`}>
+            
+            <a onClick={() => {setNoteId(note.id)}} className="cursor-pointer w-[300px] border border-slate-100 rounded">
               <div className="shadow flex p-4 gap-4 rounded">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="icon icon-tabler icon-tabler-notes"
-                  width="24"
-                  height="24"
+                  className="icon icon-tabler icon-tabler-notes"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
@@ -64,12 +94,22 @@ export default function Notes() {
                   <path d="M9 11l6 0" />
                   <path d="M9 15l4 0" />
                 </svg>
-                <h1 key={note.id}>{note.title}</h1>
+                <h1 className="text-sm" key={note.id}>{note.title}</h1>
               </div>
             </a>
           );
         })}
+        </div>
+        <button className="btn-primary" onClick={()=>setNewNote(true)}>New Note</button>
       </div>
+      {newNote && <NewNote setNewNote={setNewNote} newNote={newNote} onNoteAdded={() => {setRefreshNotes(prev => !prev); setNewNote(!newNote)}}/>}
+      {noteData && 
+        !newNote &&
+        <div>
+          <h1 className="text-3xl font-bold mb-6">{noteData?.title}</h1>
+          <Editor key={noteData.id} content={noteData.content} isEditMode={false} />
+        </div>
+      }
     </div>
   );
 }

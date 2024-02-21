@@ -41,33 +41,7 @@ export async function GET(request: Request) {
   }
 }
 
-// Create new Note
-export async function POST(request: Request) {
-  try {
-    const { title, content, topicId } = await request.json();
-    const newNote = await prisma.notes.create({
-      data: {
-        title: title,
-        content: content,
-        topicId: topicId,
-      },
-    });
-    return new Response(JSON.stringify(newNote), {
-      status: 201,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (e) {
-    console.error("error here" + e);
-    return new Response(JSON.stringify({ error: "Unable to create note" }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-}
+
 
 // // Get a single note
 // export async function GET(request: Request) {

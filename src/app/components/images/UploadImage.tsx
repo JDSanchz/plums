@@ -42,7 +42,7 @@ const UploadImage = () => {
     
     return (
         <div>
-        <h2>Links</h2>
+        <h2> Images Uploaded </h2>
         {images.length > 0 ? (
             <ul>
             {images.map((image) => (

@@ -107,7 +107,7 @@ export default function Notes() {
         !newNote &&
         <div>
           <h1 className="text-3xl font-bold mb-6">{noteData?.title}</h1>
-          <Editor content={noteData.content} isEditMode={false} />
+          <Editor key={noteData.id} content={noteData.content} isEditMode={false} />
         </div>
       }
     </div>

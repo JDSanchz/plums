@@ -6,3 +6,4 @@ export interface Topic {
   updatedAt: Date;
   lastAccessed: Date;
 }
+

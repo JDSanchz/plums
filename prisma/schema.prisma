@@ -16,7 +16,7 @@ model Topic {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   lastAccessed DateTime @default(now())
-  Images       Images[]
+  FileUpload   FileUpload[]
   Notes        Notes[]
   Links        Links[]
   parentId     String?  @map("parent_id") 
@@ -24,12 +24,16 @@ model Topic {
   children     Topic[]  @relation("TopicToTopic") 
 }
 
-model Images {
-  id        String   @id @default(uuid())
-  title     String
-  createdAt DateTime @default(now())
-  topicId   String   @map("topic_id") // Foreign key referencing the Topic model
-  topic     Topic    @relation(fields: [topicId], references: [id])
+model FileUpload {
+  id          String   @id @default(uuid())
+  title       String
+  filename    String   // Added field for filename
+  mimeType    String   // Added field for MIME type
+  size        Int      // Added field for file size
+  data        Bytes    // Added field for binary data
+  createdAt   DateTime @default(now())
+  topicId     String   @map("topic_id") // Foreign key referencing the Topic model
+  topic       Topic    @relation(fields: [topicId], references: [id])
 }
 
 model Notes {

@@ -8,12 +8,13 @@ import topic from "../../components/topics.json";
 import NewLinkForm from "@/app/components/links/LinkForm";
 import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
-import UploadImage from "@/app/components/images/UploadImage";
+import UploadImage from "@/app/components/fileupload/UploadFile";
 import { Tabs } from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";
 import { FaLink, FaRegImage } from "react-icons/fa6";
 
 
+import ImageForm from "@/app/components/fileupload/FileUploadForm";
 export default function page() {
   const params = useParams();
   const [topic, setTopic] = useState(null);
@@ -59,6 +60,11 @@ export default function page() {
      
       
       
+      <h1>topic</h1>
+      <Notes />
+      <AllTopicLinks />
+      <NewLinkForm/>
+      <ImageForm/>
     </div>
   );
 }

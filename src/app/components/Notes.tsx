@@ -105,7 +105,7 @@ export default function Notes() {
       {newNote && <NewNote setNewNote={setNewNote} newNote={newNote} onNoteAdded={() => {setRefreshNotes(prev => !prev); setNewNote(!newNote)}}/>}
       {noteData && 
         !newNote &&
-        <div>
+        <div className="px-4">
           <h1 className="text-3xl font-bold mb-6">{noteData?.title}</h1>
           <Editor key={noteData.id} content={noteData.content} isEditMode={false} />
         </div>

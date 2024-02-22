@@ -114,7 +114,7 @@ export default function Editor({ isEditMode, content, setContentNote }: EditorPr
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container">
         {isEditMode && <ToolbarPlugin />}
-        <div className="editor-inner max-h-[600px] max-w-[800px] min-w-[600px] overflow-y-auto">
+        <div className="editor-inner max-h-[500px] overflow-y-auto md:max-w-[800px] overflow-y-auto">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
             placeholder={<Placeholder />}

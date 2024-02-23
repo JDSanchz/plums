@@ -57,14 +57,6 @@ export default function page() {
           </Tabs.Item>
         </Tabs>
       </div>
-     
-      
-      
-      <h1>topic</h1>
-      <Notes />
-      <AllTopicLinks />
-      <NewLinkForm/>
-      <ImageForm/>
     </div>
   );
 }

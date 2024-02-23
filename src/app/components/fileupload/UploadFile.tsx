@@ -3,8 +3,10 @@
 import React, { Key, ReactNode, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { FileUpload } from '../../models/FileUpload';
+import UploadFiles from './FileUploadForm';
 
 type UploadFileProps = {
+    data: any;
     title: ReactNode;
     id: Key | null | undefined;
     fileUploads: FileUpload[]; // Update the property name
@@ -38,15 +40,20 @@ const UploadFile = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
-    
+
     return (
         <div>
+            <UploadFiles />
             <h2>Files Uploaded</h2>
             {fileUploads.length > 0 ? (
                 <ul>
                     {fileUploads.map((file) => (
                         <li key={file.id}>
                             <p>{file.title}</p>
+                            {/* Render file preview if it's an image */}
+                            {file.data && (
+                                <img src={file.data} alt={file.title} style={{ maxWidth: '100px' }} />
+                            )}
                         </li>
                     ))}
                 </ul>

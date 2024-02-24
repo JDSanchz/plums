@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
-
-const NewLinkForm = () => {
+interface NewLinkFormProps {
+  onLinkCreate: (newLink: any) => void; // Adjust the type of newLink as needed
+}
+const NewLinkForm: React.FC<NewLinkFormProps> = ({ onLinkCreate }) => {
+  // Component logic remains the same
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [desc, setDesc] = useState('');
@@ -13,6 +16,7 @@ const NewLinkForm = () => {
   const handleSubmit = async (event:any) => {
     event.preventDefault();
     setError('');
+
 
     // Ensure that you have the topicId from the URL parameters
     const topicId = params.id;
@@ -33,11 +37,17 @@ const NewLinkForm = () => {
       if (response.ok) {
         const newLink = await response.json();
         console.log('Link created successfully:', newLink);
-        // Reset form or handle the success case
+      
+        // Reset form fields
         setTitle('');
         setUrl('');
         setDesc('');
+      
+        // Here's the critical part: invoking the callback with the new link
+        onLinkCreate(newLink); // Ensure this line is present and correctly called
+      
       } else {
+        // Handle response errors
         const errorData = await response.json();
         setError(errorData.error || 'Error creating link');
       }
@@ -47,7 +57,7 @@ const NewLinkForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-purple-50 shadow-md rounded-lg">
+    <div className="mx-auto p-4 bg-purple-50 shadow-md rounded-lg">
       <h1 className="text-lg font-semibold mb-4 text-gray-900">Create New Link</h1>
       {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">

@@ -15,56 +15,88 @@ import { FaLink, FaRegImage } from "react-icons/fa6";
 
 
 import ImageForm from "@/app/components/fileupload/FileUploadForm";
-export default function page() {
+export default function Page() {
   const params = useParams();
   const [topic, setTopic] = useState(null);
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const response = await fetch(`/api/topics/topic?topicId=${params.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        setTopic(data);
-      } catch (error) {
-        console.error("Failed to fetch topics:", error);
-      }
-    };
+  const [links, setLinks] = useState([]); // Add state to track links
 
-    fetchNotes();
-  }, []);
-  console.log(topic)
+  useEffect(() => {
+    // Initially fetch topic details
+    fetchTopic();
+    // Fetch links initially
+    fetchLinks();
+  }, [params.id]);
+
+  const fetchTopic = async () => {
+    try {
+      const response = await fetch(`/api/topics/topic?topicId=${params.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      setTopic(data);
+    } catch (error) {
+      console.error('Failed to fetch topics:', error);
+    }
+  };
+
+  const fetchLinks = async () => {
+    try {
+      const response = await fetch(`/api/links?topicId=${params.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch links');
+      }
+      const data = await response.json();
+      setLinks(data);
+    } catch (error) {
+      console.error('Failed to fetch links:', error);
+    }
+  };
+
+  // Callback to add a new link
+  const handleNewLink = (newLink: any) => {
+    setLinks((prevLinks) => [...prevLinks, newLink]);
+    // Optionally, you could re-fetch all links instead to ensure sync with the database
+    // fetchLinks();
+  };
+
+  const updateLinks = () => {
+    // Implement the logic to update links here, for example:
+    fetchLinks();
+  };
+  
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold">{topic?.title}</h1>
-      <div className="mt-6">
-        <Tabs aria-label="Full width Tabs" style="fullWidth">
-          <Tabs.Item active title="Notes" icon={PiNotebookDuotone} >
-            <Notes />
-          </Tabs.Item>
-          <Tabs.Item active title="Links" icon={FaLink} >
-            <AllTopicLinks />
-            <NewLinkForm/>
-          </Tabs.Item>
-          <Tabs.Item active title="Images" icon={FaRegImage} >
-            <UploadImage/>
-          </Tabs.Item>
-        </Tabs>
-      </div>
-     
-      
-      
-      <h1>topic</h1>
-      <Notes />
-      <AllTopicLinks />
-      <NewLinkForm/>
-      <ImageForm/>
-    </div>
+<div>
+  <h1 className="text-3xl font-bold">{topic?.title}</h1>
+  <div className="mt-6">
+    <Tabs aria-label="Full width Tabs" style="fullWidth">
+      <Tabs.Item title="Notes" icon={PiNotebookDuotone}>
+        <Notes />
+      </Tabs.Item>
+      <Tabs.Item title="Links" icon={FaLink}>
+        {/* Wrap AllTopicLinks and NewLinkForm in a responsive container */}
+        <div className="flex flex-col md:flex-row">
+          {/* AllTopicLinks takes up 1/3 of the space on desktop */}
+          <div className="md:w-1/3 md:pr-4">
+            <AllTopicLinks links={links} updateLinks={updateLinks} />
+          </div>
+          {/* NewLinkForm takes up the remaining 2/3 of the space on desktop */}
+          <div className="md:w-2/3 md:pl-4">
+            <NewLinkForm onLinkCreate={handleNewLink} />
+          </div>
+        </div>
+      </Tabs.Item>
+      <Tabs.Item title="Images" icon={FaRegImage}>
+        <UploadImage />
+      </Tabs.Item>
+    </Tabs>
+  </div>
+</div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 
-const UploadFile = () => {
+const UploadFiles = () => {
     const [title, setTitle] = useState('');
     const [data, setData] = useState<File | null>(null); // Changed setFile to setData
     const [error, setError] = useState('');
@@ -77,4 +77,4 @@ const UploadFile = () => {
     );
 };
 
-export default UploadFile;
+export default UploadFiles;

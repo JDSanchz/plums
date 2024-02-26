@@ -52,7 +52,7 @@ const UploadFiles = () => {
 
     return (
         <div className="flex max-w-md flex-col gap-4">
-            <h1>Upload File</h1>
+            <h1 className='font-bold'>Upload File</h1>
             {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

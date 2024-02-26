@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
+import {Button, Label, TextInput, FileInput} from 'flowbite-react';
 
 const UploadFiles = () => {
     const [title, setTitle] = useState('');
@@ -50,28 +51,19 @@ const UploadFiles = () => {
     };
 
     return (
-        <div>
+        <div className="flex max-w-md flex-col gap-4">
             <h1>Upload File</h1>
             {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="title">Title</label>
-                    <input
-                        id="title"
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+                    <Label htmlFor="title" value="Title"/>
+                    <TextInput id="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
                 </div>
                 <div>
-                    <label htmlFor="data">File</label>
-                    <input
-                        id="data"
-                        type="file"
-                        onChange={(e) => setData(e.target.files?.[0] || null)} // Changed to setData
-                    />
+                    <Label htmlFor='data' value="File"/>
+                    <FileInput id="data" onChange={(e) => setData(e.target.files?.[0] || null)}/>
                 </div>
-                <button type="submit">Upload</button>
+                <Button type="submit">Upload</Button>
             </form>
         </div>
     );

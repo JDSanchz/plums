@@ -82,15 +82,13 @@ export default function Page() {
       <Tabs.Item title="Links" icon={FaLink}>
         {/* Wrap AllTopicLinks and NewLinkForm in a responsive container */}
         <div className="flex flex-col md:flex-row">
-          {/* AllTopicLinks takes up 1/3 of the space on desktop */}
-          <div className="md:w-1/3 md:pr-4">
-            <AllTopicLinks links={links} updateLinks={updateLinks} />
-          </div>
-          {/* NewLinkForm takes up the remaining 2/3 of the space on desktop */}
-          <div className="md:w-2/3 md:pl-4">
-            <NewLinkForm onLinkCreate={handleNewLink} />
-          </div>
-        </div>
+  <div className="md:w-1/3 md:pl-4 md:mr-4">
+    <NewLinkForm onLinkCreate={handleNewLink} />
+  </div>
+  <div className="md:w-2/3 md:pr-4">
+    <AllTopicLinks links={links} updateLinks={updateLinks} />
+  </div>
+</div>
       </Tabs.Item>
       <Tabs.Item title="Images" icon={FaRegImage}>
         <UploadImage />

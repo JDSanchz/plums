@@ -34,3 +34,45 @@ export async function DELETE(request: Request) {
     });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    // Extract the link's ID from the URL path
+    const url = new URL(request.url);
+    const pathSegments = url.pathname.split("/");
+    const linkId = pathSegments[pathSegments.length - 1]; // Gets the last segment, which should be the ID
+
+    // Assuming the request's body contains the updated link data in JSON format
+    const body = await request.json();
+    const { title, url: linkUrl, desc } = body; // Destructure the updated fields from the request body
+
+    // Perform the update
+    const updatedLink = await prisma.links.update({
+      where: {
+        id: linkId,
+      },
+      data: {
+        title,
+        url: linkUrl, // Note: 'url' is renamed to 'linkUrl' to avoid name conflict with 'url' from the request
+        desc,
+      },
+    });
+
+    // Return success response with the updated link
+    return new Response(JSON.stringify(updatedLink), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (e) {
+    console.error("Error updating link: ", e);
+    // Return error response
+    return new Response(JSON.stringify({ error: "Unable to update link" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}

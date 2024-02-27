@@ -11,6 +11,7 @@ export default function page() {
 
   return (
     <div>
+      <h1 className="text-3xl font-bold">{topic?.title}</h1>
       <div className="block md:hidden">
         <NewTopicInput />
       </div>

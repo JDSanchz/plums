@@ -68,3 +68,32 @@ export async function POST(request: Request) {
     });
   }
 }
+
+//update note
+export async function PUT(request: Request) {
+  try {
+    const { noteId, content } = await request.json();
+    const updatedNote = await prisma.notes.update({
+      where: {
+        id: noteId,
+      },
+      data: {
+        content: content,
+      },
+    });
+    return new Response(JSON.stringify(updatedNote), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return new Response(JSON.stringify({ error: e }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}

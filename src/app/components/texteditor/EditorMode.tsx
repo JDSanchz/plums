@@ -63,13 +63,13 @@ function MyOnChangePlugin({ onChange }) {
 const initialData = JSON.stringify(data);
 
 interface EditorProps {
-  key: string;
+  noteId: string;
   isEditMode: boolean;
   content?: string;
   setContentNote?: (note: string) => void;
 }
 
-export default function Editor({key, isEditMode, content, setContentNote }: EditorProps) {
+export default function Editor({noteId, isEditMode, content, setContentNote }: EditorProps) {
   const [editorState, setEditorState] = useState<string>();
 
   const editorConfig = {
@@ -96,7 +96,29 @@ export default function Editor({key, isEditMode, content, setContentNote }: Edit
     editorState: content,
     editable: isEditMode,
   };
-
+  console.log(noteId)
+  async function updateNote(e) {
+    console.log("update note")
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/notes/note?noteId=${noteId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({noteId:noteId, content: editorState }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+   
+    
+    
+    } catch (error) {
+      console.error("Failed to fetch topics:", error);
+    }
+  }
   function onChange(editorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
@@ -132,7 +154,10 @@ export default function Editor({key, isEditMode, content, setContentNote }: Edit
           <ListMaxIndentLevelPlugin maxDepth={7} />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
+
       </div>
+      <button className="bg-purple-100 p-4 rounded mt-4" onClick={(e)=>updateNote(e)}>Update note</button>
+
     </LexicalComposer>
   );
 }

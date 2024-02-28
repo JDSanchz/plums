@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import {Button, Label, TextInput, FileInput} from 'flowbite-react';
 
-const UploadFiles = () => {
+interface UploadFileProps {
+    setRefreshFiles: any; refreshFiles: boolean;
+}
+
+const UploadFiles = ({setRefreshFiles, refreshFiles}: UploadFileProps) => {
     const [title, setTitle] = useState('');
     const [data, setData] = useState<File | null>(null); // Changed setFile to setData
     const [error, setError] = useState('');
+
 
     const params = useParams();
 
@@ -41,6 +46,7 @@ const UploadFiles = () => {
                 console.log('File uploaded successfully:', newFile);
                 setTitle('');
                 setData(null); // Changed setFile to setData
+                setRefreshFiles(!refreshFiles);
             } else {
                 const errorData = await response.json();
                 setError(errorData.error || 'Error uploading file');
@@ -52,7 +58,7 @@ const UploadFiles = () => {
 
     return (
         <div className="flex max-w-md flex-col gap-4">
-            <h1>Upload File</h1>
+            <h1 className='font-bold'>Upload File</h1>
             {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

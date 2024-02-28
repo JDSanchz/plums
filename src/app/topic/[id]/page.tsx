@@ -8,6 +8,8 @@ import topic from "../../components/topics.json";
 import NewLinkForm from "@/app/components/links/LinkForm";
 import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
+import UploadFile from "@/app/components/fileupload/UploadFile";
+import { Tabs } from 'flowbite-react';
 import UploadImage from "@/app/components/fileupload/UploadFile";
 import { Button, Tabs } from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";
@@ -98,7 +100,7 @@ export default function Page() {
 </div>
       </Tabs.Item>
       <Tabs.Item title="Images" icon={FaRegImage}>
-        <UploadImage />
+        <UploadFile />
       </Tabs.Item>
     </Tabs>
   </div>

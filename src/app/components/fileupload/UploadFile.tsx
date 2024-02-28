@@ -15,6 +15,7 @@ type UploadFileProps = {
 const UploadFile = () => {
     const [fileUploads, setFileUploads] = useState<UploadFileProps[]>([]); // Update the state variable name
     const [error, setError] = useState('');
+    const [refreshFiles, setRefreshFiles] = useState(false);
     const params = useParams();
     const topicId = params.id;
     
@@ -35,7 +36,7 @@ const UploadFile = () => {
             }
         };
         fetchFiles(); // Call the updated fetch function
-    }, [topicId]);
+    }, [refreshFiles, topicId]);
 
 const deleteFile = async (id: string) => {
     try {
@@ -46,7 +47,7 @@ const deleteFile = async (id: string) => {
             throw new Error('Failed to delete file');
         }
         // Call fetchFiles to refresh the list after deletion
-        fetchFiles();
+        setRefreshFiles(!refreshFiles);
     } catch (error) {
         console.error('Failed to delete file:', error);
     }
@@ -58,7 +59,7 @@ const deleteFile = async (id: string) => {
 
     return (
         <div className="flex flex-col lg:flex-row gap-10">
-            <UploadFiles />
+            <UploadFiles setRefreshFiles={setRefreshFiles} refreshFiles={refreshFiles} />
             {fileUploads.length > 0 ? (
                 <ul>
                     <h2 className='text-2xl font-bold'>Files Uploaded</h2>

@@ -10,7 +10,7 @@ import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
 import UploadFile from "@/app/components/fileupload/UploadFile";
 import UploadImage from "@/app/components/fileupload/UploadFile";
-import { Button} from 'flowbite-react';
+import { Tabs, Button} from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";
 import { FaLink, FaRegImage } from "react-icons/fa6";
 

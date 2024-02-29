@@ -9,7 +9,6 @@ import NewLinkForm from "@/app/components/links/LinkForm";
 import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
 import UploadFile from "@/app/components/fileupload/UploadFile";
-import { Tabs } from 'flowbite-react';
 import UploadImage from "@/app/components/fileupload/UploadFile";
 import { Button} from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";

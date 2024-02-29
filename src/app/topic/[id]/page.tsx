@@ -11,7 +11,7 @@ import AllTopicLinks from "@/app/components/links/AllTopicLinks";
 import UploadFile from "@/app/components/fileupload/UploadFile";
 import { Tabs } from 'flowbite-react';
 import UploadImage from "@/app/components/fileupload/UploadFile";
-import { Button, Tabs } from 'flowbite-react';
+import { Button} from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";
 import { FaLink, FaRegImage } from "react-icons/fa6";
 

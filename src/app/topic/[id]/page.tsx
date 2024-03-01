@@ -9,7 +9,6 @@ import NewLinkForm from "@/app/components/links/LinkForm";
 import Notes from "@/app/components/Notes";
 import AllTopicLinks from "@/app/components/links/AllTopicLinks";
 import UploadFile from "@/app/components/fileupload/UploadFile";
-import UploadImage from "@/app/components/fileupload/UploadFile";
 import { Tabs, Button} from 'flowbite-react';
 import { PiNotebookDuotone } from "react-icons/pi";
 import { FaLink, FaRegImage } from "react-icons/fa6";
@@ -98,7 +97,7 @@ export default function Page() {
   </div>
 </div>
       </Tabs.Item>
-      <Tabs.Item title="Images" icon={FaRegImage}>
+      <Tabs.Item title="Attachments" icon={FaRegImage}>
         <UploadFile />
       </Tabs.Item>
     </Tabs>

@@ -67,12 +67,13 @@ interface EditorProps {
   isEditMode: boolean;
   content?: string;
   setContentNote?: (note: string) => void;
+  onNoteAdded?: any;
 }
 
-export default function Editor({noteId, isEditMode, content, setContentNote }: EditorProps) {
+export default function Editor({noteId, isEditMode, content, setContentNote, onNoteAdded }: EditorProps) {
   const [editorState, setEditorState] = useState<string>();
 
-  const editorConfig = {
+  let editorConfig = {
     // The editor theme
     theme: ExampleTheme,
     // Handling of errors during update
@@ -112,6 +113,12 @@ export default function Editor({noteId, isEditMode, content, setContentNote }: E
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data)
+     
+
+      if (data) {
+        onNoteAdded();
+      }
    
     
     
@@ -119,6 +126,7 @@ export default function Editor({noteId, isEditMode, content, setContentNote }: E
       console.error("Failed to fetch topics:", error);
     }
   }
+
   function onChange(editorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
@@ -128,6 +136,7 @@ export default function Editor({noteId, isEditMode, content, setContentNote }: E
     // if(setContentNote) {
     //   setContentNote(JSON.stringify(editorStateJSON))
     // }
+
 
   }
    
@@ -156,7 +165,7 @@ export default function Editor({noteId, isEditMode, content, setContentNote }: E
         </div>
 
       </div>
-      <button className="bg-purple-100 p-4 rounded mt-4" onClick={(e)=>updateNote(e)}>Update note</button>
+      <button className="bg-purple-100 p-2 rounded mt-4" onClick={(e)=>updateNote(e)}>Update note</button>
 
     </LexicalComposer>
   );

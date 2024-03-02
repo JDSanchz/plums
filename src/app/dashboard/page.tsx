@@ -2,16 +2,16 @@
 import React, { useState } from "react";
 import Welcome from "../components/Welcome";
 import TopicCard from "../components/TopicCard";
-import topic from "../components/topics.json";
 import NewTopicInput from "../components/NewTopicInput";
 import RecentlyOpenedTopics from "../components/recentlyOpenedTopics";
+import { useTopics } from "../components/contexts/TopicProvider";
 
 export default function page() {
-  const [topics, setTopics] = useState(topic);
-
+  const { topics, count, setCount } = useTopics();
+  console.log(topics)
   return (
     <div>
-      <h1 className="text-3xl font-bold">{topic?.title}</h1>
+      
       <div className="block md:hidden">
         <NewTopicInput />
       </div>
@@ -20,7 +20,7 @@ export default function page() {
         {/* {topics?.map((topic) => <TopicCard key={topic.name} topic={topic} />)} */}
       </div>
       <div className="mt-8">
-        <Welcome />
+       {topics?.length === 0 && <Welcome />}
       </div>
     </div>
   );

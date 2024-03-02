@@ -22,6 +22,7 @@ export default function Notes() {
   const [editMode, setEditMode] = useState(false);
   const params = useParams();
 
+  console.log(notes)
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -115,7 +116,13 @@ export default function Notes() {
             </span>
           </div>
           {!editMode && <Editor key={noteData.id} isEditMode={editMode} content={noteData.content} setContentNote={(note: string) => {console.log(note)}}/>}
-          {editMode && <EditorMode key={noteData.id} noteId={noteData.id} isEditMode={editMode} content={noteData.content} setContentNote={(note: string) => {console.log(note)}}/>}
+          {editMode && 
+          <div>
+            
+            <EditorMode onNoteAdded={() => {setRefreshNotes(prev => !prev); setEditMode(false)}} key={noteData.id} noteId={noteData.id} isEditMode={editMode} content={noteData.content} setContentNote={(note: string) => {console.log(note)}}/>
+            <button className="bg-red-50 p-2 ml-4 rounded" onClick={()=>setEditMode(!editMode)}>Cancel</button>  
+          </div>
+          }
         </div>
       }
     </div>

@@ -86,7 +86,4 @@ const deleteFile = async (id: string) => {
 }
 
 export default UploadFile;
-function fetchFiles() {
-    throw new Error('Function not implemented.');
-}
 

@@ -4,6 +4,7 @@ import React, { Key, ReactNode, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { FileUpload } from '../../models/FileUpload';
 import UploadFiles from './FileUploadForm';
+import Image from 'next/image';
 
 type UploadFileProps = {
     data: any;
@@ -71,7 +72,7 @@ const deleteFile = async (id: string) => {
                             <p>{file.title}</p>
                             {/* Render file preview if it's an image */}
                             {file.data && (
-                                <img src={file.imageUrl} alt={file.title} style={{ maxWidth: '100px' }} />
+                                <Image src={file.imageUrl} alt={file.title} width={100} height={100} />
                                 )}
                                 <button className="text-purple-600 hover:text-purple-800 mt-3" onClick={() => deleteFile(file.id as string)}><svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-backspace-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z" strokeWidth="0" fill="currentColor" /></svg></button>
                         </li><hr /></>

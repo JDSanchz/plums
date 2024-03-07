@@ -12,7 +12,7 @@ const Navbar = () => {
   const [childrenTopics, setChildrenTopics] = useState([]);
   const pathname = usePathname();
   console.log(currentTopicId);
-  const { topics, setTopics} = useTopics();
+  const [topics, setTopics] = useState([]);
 
 
   const fetchTopics = async () => {

@@ -150,7 +150,7 @@ export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) 
       <input type="text" className="border-slate-200 mb-4 rounded text-sm" onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setTitle(e.target.value)}/>
       <LexicalComposer initialConfig={editorConfig}>
     
-        <div className="editor-container">
+        <div className="editor-container mt-8">
           <ToolbarPlugin />
           <div className="editor-inner max-h-[600px] overflow-y-auto">
             <RichTextPlugin

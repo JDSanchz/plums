@@ -12,7 +12,7 @@ export default function Home() {
 
       <main className="flex flex-1 flex-col items-center justify-center w-full px-20 text-black">
         <h1 className="text-6xl font-bold">
-          Welcome to <span className="text-purple-600">PLMS</span>
+          Welcome to <span className="text-purple-600">PLUMS</span>
         </h1>
         <p className="mt-3 text-2xl">
           Your personal space for{" "}

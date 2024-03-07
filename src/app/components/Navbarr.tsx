@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTopics } from "./contexts/TopicProvider";
 import NewTopicInput from "./NewTopicInput";
 import { usePathname } from "next/navigation";
@@ -12,36 +12,27 @@ const Navbar = () => {
   const [childrenTopics, setChildrenTopics] = useState([]);
   const pathname = usePathname();
   console.log(currentTopicId);
-  const { topics, setTopics, addTopic, count, setCount } = useTopics();
-  const sortedTopics = topics ? [...topics] : [];
+  const { topics, setTopics} = useTopics();
+
 
   const fetchTopics = async () => {
-    setTopics(undefined);
     try {
       const response = await fetch("/api/topics");
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      setTopics(data);
-      console.log(data);
-      sortedTopics.sort((a, b) => {
-        // Convert lastAccessed to date objects to compare
-        const dateA = new Date(a.lastAccessed);
-        const dateB = new Date(b.lastAccessed);
-      
-        // Compare the two dates
-        return dateB + dateA; 
-      });
-      console.log(sortedTopics);
+      const sortedData = data.sort((a, b) => new Date(b.lastAccessed) - new Date(a.lastAccessed));
+      setTopics(sortedData);
     } catch (error) {
       console.error("Failed to fetch topics:", error);
     }
   };
 
   useEffect(() => {
+    
     fetchTopics();
-  }, [count]);
+  }, [setTopics]);
 
   // Adjust visibility based on screen width
   useEffect(() => {
@@ -88,10 +79,44 @@ const Navbar = () => {
       }
   };
 
-  console.log(sortedTopics);
+  useEffect(() => {
+    const fetchChildrenTopics = async () => {
+      if (typeof currentTopicId === "string") {
+        try {
+          const response = await fetch(`/api/topics/children?parentId=${currentTopicId}`);
+          const data = await response.json();
+          if (Array.isArray(data.children)) {
+            setChildrenTopics(data.children);
+          } else {
+            throw new Error("Received `data.children` is not an array");
+          }
+        } catch (error) {
+          console.error(`Failed to fetch children topics:`, error);
+          setChildrenTopics([]);
+        }
+      }
+    };
+    
+    fetchChildrenTopics();
+  }, [currentTopicId]);
+
   useEffect(() => {
     fetchChildrenTopics(currentTopicId);
   }, [currentTopicId]);
+
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      fetchTopics(); // Fetch and sort topics when navigating to dashboard
+    }
+  }, [pathname]);
+  
+  const handleTopicClick = async (topicId) => {
+    // Update the lastAccessed time locally or through your service
+    await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
+    // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
+    // This can be a direct state update or a more complex logic depending on your application structure
+    fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
+  };
 
   return (
     <div
@@ -171,19 +196,12 @@ const Navbar = () => {
               )}
               <div className="mt-2 max-h-60 overflow-auto">
                 
-              {sortedTopics?.map((topic, key) => (
+              {topics?.map((topic, key) => (
         <React.Fragment key={topic.id}>
           <Link href={`/topic/${topic.id}`}>
             <div
               className={`block flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
-              onClick={() => {
-                lastAccessed({
-                  id: topic.id,
-                  lastAccessed: new Date().toISOString(),
-                });
-                setCount(count + 1);
-              }}
-            >
+              onClick={() => handleTopicClick(topic.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-library"

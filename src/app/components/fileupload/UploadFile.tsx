@@ -85,7 +85,10 @@ const deleteFile = async (id: string) => {
                     ))}
                 </ul>
             ) : (
-                <p>No files available.</p>
+                <div>
+                    <h2 className='text-2xl font-bold'>Files Uploaded</h2>
+                    <p>No files available.</p>
+                </div>
             )}
         </div>
     );

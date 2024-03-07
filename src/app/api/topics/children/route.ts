@@ -16,7 +16,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    console.log("Made it to the ROUTE function with Parent ID:", topicId);
     // Assuming 'children' is the relation name. Adjust based on your schema.
     const topicWithChildren = await prisma.topic.findUnique({
       where: {

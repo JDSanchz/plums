@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 const SettingsPage = () => {
   const { id } = useParams();
@@ -8,6 +9,7 @@ const SettingsPage = () => {
   const [children, setChildren] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [parent, setParent] = useState(null);
 
   useEffect(() => {
     fetchTopic(id);
@@ -35,10 +37,31 @@ const SettingsPage = () => {
       }
       const data = await response.json();
       setTopic(data);
+      fetchParent(data.parentId);
     } catch (error) {
       console.error("Could not fetch the topic: ", error);
     }
   };
+
+  const fetchParent = async (topicId) => {
+    try {
+      const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setParent(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Could not fetch the topic: ", error);
+    }
+  };
+
 
   const fetchChildren = async (topicId) => {
     try {
@@ -99,21 +122,70 @@ const SettingsPage = () => {
       console.error("Could not add child topic: ", error);
     }
   };
+
+  const handleRemoveChild = async (childId, parentId) => {
+    if (!confirm("Are you sure you want to remove this child topic from its parent? This action cannot be undone.")) {
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/topics/removeChild`, {
+        method: 'POST', // Use POST instead of DELETE
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          parentId: parentId,
+          childId: childId,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log("Parent relationship removed successfully");
+      fetchChildren(parentId); // Refresh the list of children
+    } catch (error) {
+      console.error("Could not remove parent relationship: ", error);
+    }
+  };
+  
   
 
   return (
 <div className="p-4">
   <h2 className="text-2xl font-bold mb-4">Settings for {topic?.title || 'Loading topic...'}</h2>
   <hr className="mb-4" />
+   {/* Parent Topic Section */}
+   <div className="mb-4">
+        {topic?.parentId? (
+          <p className="mb-2 text-lg">
+            Parent Topic: <Link href={`../${parent?.id}`} className="text-blue-500 hover:underline">{parent?.title}</Link>
+          </p>
+        ) : (
+          <p>This topic does not have a parent.</p>
+        )}
+      </div>
   <div className="mb-6">
-    <div>
+  <div>
   <h3 className="font-semibold text-lg mb-2">Children Topics:</h3>
   {children.length > 0 ? (
-    <ul className="list-disc pl-5">
-      {children.map(child => (
-        <li key={child.id} className="mb-1">{child.title}</li>
-      ))}
-    </ul>
+  <ul className="list-disc pl-5">
+    {children.map((child) => (
+      <li key={child.id} className="flex justify-between mb-1">
+        {/* Wrap the child title in a Link component */}
+        <Link href={`../${child.id}`} passHref>
+          <p className="text-blue-600 hover:underline">{child.title}</p>
+        </Link>
+        <button
+          onClick={() => handleRemoveChild(child.id, topic?.id)}
+          className="ml-4 px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+        >
+          Delete
+        </button>
+      </li>
+    ))}
+  </ul>
   ) : (
     <p>No children topics yet.</p>
   )}

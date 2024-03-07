@@ -1,35 +1,38 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTopics } from "./contexts/TopicProvider";
 import NewTopicInput from "./NewTopicInput";
 import { usePathname } from "next/navigation";
-
 import { lastAccessed } from "./services/recents";
+import { useParams } from 'next/navigation';
+import Link from "next/link";
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
-
+  const { id:currentTopicId } = useParams();
+  const [childrenTopics, setChildrenTopics] = useState([]);
   const pathname = usePathname();
+  console.log(currentTopicId);
+  const { topics, setTopics} = useTopics();
 
-  // const [topics, setTopics] = useState([]);
-  const { topics, setTopics, addTopic, count, setCount } = useTopics();
+
+  const fetchTopics = async () => {
+    try {
+      const response = await fetch("/api/topics");
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      const sortedData = data.sort((a, b) => new Date(b.lastAccessed) - new Date(a.lastAccessed));
+      setTopics(sortedData);
+    } catch (error) {
+      console.error("Failed to fetch topics:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTopics = async () => {
-      setTopics(undefined);
-      try {
-        const response = await fetch("/api/topics");
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        setTopics(data);
-      } catch (error) {
-        console.error("Failed to fetch topics:", error);
-      }
-    };
-
+    
     fetchTopics();
-  }, [count]);
+  }, [setTopics]);
 
   // Adjust visibility based on screen width
   useEffect(() => {
@@ -54,6 +57,65 @@ const Navbar = () => {
     if (window.innerWidth <= 768) {
       setIsMenuVisible(!isMenuVisible);
     }
+  };
+
+  const fetchChildrenTopics = async (currentTopicId: string | string[]) => {
+      try {
+        const response = await fetch(`/api/topics/children?parentId=${currentTopicId}`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data.children)) {
+          setChildrenTopics(data.children);
+          console.log(childrenTopics);
+        } else {
+          console.error("Received `data.children` is not an array:", data.children);
+          setChildrenTopics([]);
+        }
+      } catch (error) {
+        console.error(`Failed to fetch children topics for topic ${currentTopicId}:`, error);
+        setChildrenTopics([]);
+      }
+  };
+
+  useEffect(() => {
+    const fetchChildrenTopics = async () => {
+      if (typeof currentTopicId === "string") {
+        try {
+          const response = await fetch(`/api/topics/children?parentId=${currentTopicId}`);
+          const data = await response.json();
+          if (Array.isArray(data.children)) {
+            setChildrenTopics(data.children);
+          } else {
+            throw new Error("Received `data.children` is not an array");
+          }
+        } catch (error) {
+          console.error(`Failed to fetch children topics:`, error);
+          setChildrenTopics([]);
+        }
+      }
+    };
+    
+    fetchChildrenTopics();
+  }, [currentTopicId]);
+
+  useEffect(() => {
+    fetchChildrenTopics(currentTopicId);
+  }, [currentTopicId]);
+
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      fetchTopics(); // Fetch and sort topics when navigating to dashboard
+    }
+  }, [pathname]);
+  
+  const handleTopicClick = async (topicId) => {
+    // Update the lastAccessed time locally or through your service
+    await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
+    // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
+    // This can be a direct state update or a more complex logic depending on your application structure
+    fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
   };
 
   return (
@@ -133,21 +195,13 @@ const Navbar = () => {
                 </div>
               )}
               <div className="mt-2 max-h-60 overflow-auto">
-                {topics?.map((topic, key) => {
-                  return (
-                    <a
-                      key={key}
-                      href={`/topic/${topic.id}`}
-                      className="mt-1 block  flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100"
-                      onClick={() => {
-                        lastAccessed({
-                          id: topic.id,
-                          lastAccessed: new Date().toISOString(),
-                        });
-                        setCount(count + 1);
-                      }}
-                    >
-                      <div>
+                
+              {topics?.map((topic, key) => (
+        <React.Fragment key={topic.id}>
+          <Link href={`/topic/${topic.id}`}>
+            <div
+              className={`block flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
+              onClick={() => handleTopicClick(topic.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-library"
@@ -167,11 +221,19 @@ const Navbar = () => {
                           <path d="M11 10h6" />
                           <path d="M11 13h3" />
                         </svg>
-                      </div>
                       <p className="truncate">{topic.title}</p>
-                    </a>
-                  );
-                })}
+            </div>
+          </Link>
+          {topic.id === currentTopicId && childrenTopics.map((childTopic) => (
+            <Link key={childTopic.id} href={`/topic/${childTopic.id}`}>
+              <div className=" text-sm hover:bg-purple-100 pl-6 flex p-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-note" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 20l7 -7" /><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" /></svg>
+                <p className="truncate pl-2">{childTopic.title} </p>
+              </div>
+            </Link>
+          ))}
+        </React.Fragment>
+      ))}
               </div>
             </div>
             <div className="py-0 pl-4">

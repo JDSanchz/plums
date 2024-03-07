@@ -20,9 +20,10 @@ const RecentlyOpenedTopics: React.FC = () => {
     <div>
       <h1 className="text-2xl font-bold">Recent Topics</h1>
       <div className="mt-8 flex flex-grow flex-wrap gap-4">
-        {recentTopics?.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} />
-        ))}
+      {[...recentTopics]?.reverse().map((topic) => (
+        <TopicCard key={topic.id} topic={topic} />
+      ))}
+
       </div>
     </div>
   );

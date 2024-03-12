@@ -50,7 +50,7 @@ function MyCustomAutoFocusPlugin() {
 
 // When the editor changes, you can get notified via the
 // OnChangePlugin!
-function MyOnChangePlugin({ onChange }) {
+function MyOnChangePlugin({ onChange }:any) {
   // Access the editor through the LexicalComposerContext
   const [editor] = useLexicalComposerContext();
   // Wrap our listener in useEffect to handle the teardown and avoid stale references.
@@ -78,7 +78,7 @@ export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) 
     // The editor theme
     theme: ExampleTheme,
     // Handling of errors during update
-    onError(error) {
+    onError(error:any) {
       throw error;
     },
     // Any custom nodes go here
@@ -101,7 +101,7 @@ export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) 
   const params = useParams();
 
   // save note
-  async function saveNote(e) {
+  async function saveNote(e:any) {
     e.preventDefault();
     try {
       const response = await fetch(`/api/notes/note`, {
@@ -126,7 +126,7 @@ export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) 
     }
   }
 
-  function onChange(editorState) {
+  function onChange(editorState:any) {
 
     
 

@@ -73,7 +73,7 @@ interface EditorProps {
 
 export default function Editor({noteId, isEditMode, content, title, setContentNote, onNoteAdded }: EditorProps) {
   const [editorState, setEditorState] = useState<string>();
-
+  const [updated, setUpdated] = useState(false);
   let editorConfig = {
     // The editor theme
     theme: ExampleTheme,
@@ -123,8 +123,8 @@ export default function Editor({noteId, isEditMode, content, title, setContentNo
         onNoteAdded();
       }
    
-    
-    
+      setUpdated(true);  
+        
     } catch (error) {
       console.error("Failed to fetch topics:", error);
     }
@@ -151,8 +151,14 @@ export default function Editor({noteId, isEditMode, content, title, setContentNo
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
-      <input type="text" value={titleNote} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setTitleNote(e.target.value)}/>
+      {updated && <div className="bg-blue-50 p-4 mb-4 flex justify-between">Updated Note
+        <a className="cursor-pointer" onClick={()=>setUpdated(false)}>
+          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-square-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" /><path d="M9 9l6 6m0 -6l-6 6" /></svg>
+        </a>
+      </div>}
+      <input type="text" className="mb-4" value={titleNote} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setTitleNote(e.target.value)}/>
       <div className="editor-container">
+        
         <ToolbarPlugin />
         <div className="editor-inner max-h-[500px] overflow-y-auto md:max-w-[800px] md:min-w-[500px]">
           <RichTextPlugin

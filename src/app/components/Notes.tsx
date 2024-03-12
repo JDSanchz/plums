@@ -22,7 +22,7 @@ export default function Notes() {
   const [editMode, setEditMode] = useState(false);
   const params = useParams();
 
-  console.log(notes)
+  
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -74,11 +74,12 @@ export default function Notes() {
 
       <div className="flex flex-wrap flex-col gap-4">
         <div className="max-h-[300px] flex flex-col gap-4 py-3 px-2 overflow-y-auto">
-        {notes.map((note) => {
+        {notes.map((note:any) => {
           return (
             
-            <a onClick={() => {setNoteId(note.id)}} className="cursor-pointer w-[300px] border border-slate-100 rounded">
-              <div className="shadow flex p-4 gap-4 rounded">
+            <a  className="cursor-pointer w-[300px] border border-slate-100 rounded">
+              <div className="shadow flex justify-between p-4 gap-4 rounded">
+                <div className="flex gap-2" onClick={() => {setNoteId(note.id)}}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="icon icon-tabler icon-tabler-notes"
@@ -98,6 +99,10 @@ export default function Notes() {
                   <path d="M9 15l4 0" />
                 </svg>
                 <h1 className="text-sm" key={note.id}>{note.title}</h1>
+                </div>
+                <span>
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-backspace"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5z" /><path d="M12 10l4 4m0 -4l-4 4" /></svg>
+                </span>
               </div>
             </a>
           );

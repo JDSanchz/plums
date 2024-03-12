@@ -251,28 +251,22 @@ const Navbar = () => {
               {/* Quick Notes SVG icon */}
               Quick Notes
             </a>
-            <a href="#" className="flex items-center p-4 hover:bg-gray-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-trash mr-2"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M4 7l16 0" />
-                <path d="M10 11l0 6" />
-                <path d="M14 11l0 6" />
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+            <Link href={`/topic/label/${topics?.title}`} className="flex items-center p-4 hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+              className="icon icon-tabler icon-tabler-tags mr-2" 
+              width="24" height="24" viewBox="0 0 24 24" 
+              stroke-width="1.5" 
+              stroke="currentColor" 
+              fill="none" stroke-linecap="round" 
+              stroke-linejoin="round">
+              <path stroke="none" 
+              d="M0 0h24v24H0z" fill="none"/>
+              <path d="M3 8v4.172a2 2 0 0 0 .586 1.414l5.71 5.71a2.41 2.41 0 0 0 3.408 0l3.592 -3.592a2.41 2.41 0 0 0 0 -3.408l-5.71 -5.71a2 2 0 0 0 -1.414 -.586h-4.172a2 2 0 0 0 -2 2z" />
+              <path d="M18 19l1.592 -1.592a4.82 4.82 0 0 0 0 -6.816l-4.592 -4.592" />
+              <path d="M7 10h-.01" />
               </svg>
-              Trash
-            </a>
+              Label
+            </Link>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -1,0 +1,105 @@
+'use client';
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { lastAccessed } from "@/app/components/services/recents";
+import { useParams } from 'next/navigation';
+
+
+
+export default function LabelPage() {
+    const { id:currentTopicId } = useParams();
+    const [topics, setTopics] = useState<Topic[]>([]);
+
+    interface Topic {
+      id: string;
+      title: string;
+      parentId: string;
+      lastAccessed: string;
+      createdAt: string;
+      updatedAt: string;
+      children: Topic[];
+    }
+    
+    const fetchTopics = async () => {
+        try {
+          const response = await fetch("/api/topics");
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const data = await response.json();
+          const sortedData = data.sort((a: { lastAccessed: string | number | Date; }, b: { lastAccessed: string | number | Date; }) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime());;
+          setTopics(sortedData);
+        } catch (error) {
+          console.error("Failed to fetch topics:", error);
+        }
+      };
+    
+      useEffect(() => {
+        
+        fetchTopics();
+      }, [setTopics]);
+
+      const handleTopicClick = async (topicId: any) => {
+        // Update the lastAccessed time locally or through your service
+        await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
+        // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
+        // This can be a direct state update or a more complex logic depending on your application structure
+        fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
+      };
+
+
+    return (
+        <div className="p-4">
+            <p className="font-semibold">Labels Page</p>
+            {topics === undefined && (
+                <div role="status" className="max-w-sm animate-pulse mt-6">
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              )}
+              <div className="mt-2 max-h-60 overflow-auto">
+              {topics?.map((topic, key) => (
+        <React.Fragment key={topic.id}>
+          <Link href={`/topic/${topic.id}`}>
+            <div
+              className={`flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
+              onClick={() => handleTopicClick(topic.id)}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="icon icon-tabler icon-tabler-library"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M7 3m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                          <path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" />
+                          <path d="M11 7h5" />
+                          <path d="M11 10h6" />
+                          <path d="M11 13h3" />
+                        </svg>
+                      <p className="truncate">{topic.title}</p>
+            </div> 
+            </Link>
+          {topic.id === currentTopicId && childrenTopics.map((childTopic) => (
+            <Link key={childTopic.id} href={`/topic/${childTopic.id}`}>
+              <div className=" text-sm hover:bg-purple-100 pl-6 flex p-1" onClick={() => handleTopicClick(childTopic.id)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-note" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 20l7 -7" /><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" /></svg>
+                <p className="truncate pl-2">{childTopic.title} </p>
+              </div>
+            </Link>
+          ))}
+        </React.Fragment>
+      ))}
+              </div>
+        </div>
+    );
+}

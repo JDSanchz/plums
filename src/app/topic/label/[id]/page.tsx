@@ -60,12 +60,12 @@ export default function LabelPage() {
                   <span className="sr-only">Loading...</span>
                 </div>
               )}
-              <div className="mt-2 max-h-60 overflow-auto">
-              {topics?.map((topic, key) => (
+              <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
+              {topics?.map((topic) => (
         <React.Fragment key={topic.id}>
           <Link href={`/topic/${topic.id}`}>
             <div
-              className={`flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
+              className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
               onClick={() => handleTopicClick(topic.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -86,20 +86,15 @@ export default function LabelPage() {
                           <path d="M11 10h6" />
                           <path d="M11 13h3" />
                         </svg>
-                      <p className="truncate">{topic.title}</p>
+                        <p className="truncate">{topic.title}</p>
             </div> 
             </Link>
-          {topic.id === currentTopicId && childrenTopics.map((childTopic) => (
-            <Link key={childTopic.id} href={`/topic/${childTopic.id}`}>
-              <div className=" text-sm hover:bg-purple-100 pl-6 flex p-1" onClick={() => handleTopicClick(childTopic.id)}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-note" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 20l7 -7" /><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" /></svg>
-                <p className="truncate pl-2">{childTopic.title} </p>
-              </div>
-            </Link>
-          ))}
         </React.Fragment>
-      ))}
-              </div>
-        </div>
-    );
-}
+          )
+        )}
+      </div>
+        </div>  
+    );  
+    }
+    
+      

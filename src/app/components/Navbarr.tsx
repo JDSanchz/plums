@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { useTopics } from "./contexts/TopicProvider";
 import NewTopicInput from "./NewTopicInput";
 import { usePathname } from "next/navigation";
 import { lastAccessed } from "./services/recents";
@@ -9,11 +8,20 @@ import Link from "next/link";
 const Navbar = () => {
   const [isMenuVisible, setIsMenuVisible] = useState<Boolean>(false); // Menu visible by default
   const { id:currentTopicId } = useParams();
-  const [childrenTopics, setChildrenTopics] = useState([]);
+  const [childrenTopics, setChildrenTopics] = useState<Topic[]>([]);
   const pathname = usePathname();
   console.log(currentTopicId);
-  const { topics, setTopics} = useTopics();
+  const [topics, setTopics] = useState<Topic[]>([]);
 
+  interface Topic {
+    id: string;
+    title: string;
+    parentId: string;
+    lastAccessed: string;
+    createdAt: string;
+    updatedAt: string;
+    children: Topic[];
+  }
 
   const fetchTopics = async () => {
     try {
@@ -22,7 +30,7 @@ const Navbar = () => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      const sortedData = data.sort((a, b) => new Date(b.lastAccessed) - new Date(a.lastAccessed));
+      const sortedData = data.sort((a: { lastAccessed: string | number | Date; }, b: { lastAccessed: string | number | Date; }) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime());;
       setTopics(sortedData);
     } catch (error) {
       console.error("Failed to fetch topics:", error);
@@ -110,7 +118,7 @@ const Navbar = () => {
     }
   }, [pathname]);
   
-  const handleTopicClick = async (topicId) => {
+  const handleTopicClick = async (topicId: any) => {
     // Update the lastAccessed time locally or through your service
     await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
     // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
@@ -226,8 +234,8 @@ const Navbar = () => {
           </Link>
           {topic.id === currentTopicId && childrenTopics.map((childTopic) => (
             <Link key={childTopic.id} href={`/topic/${childTopic.id}`}>
-              <div className=" text-sm hover:bg-purple-100 pl-6 flex p-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-note" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 20l7 -7" /><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" /></svg>
+              <div className=" text-sm hover:bg-purple-100 pl-6 flex p-1" onClick={() => handleTopicClick(childTopic.id)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-note" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 20l7 -7" /><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" /></svg>
                 <p className="truncate pl-2">{childTopic.title} </p>
               </div>
             </Link>

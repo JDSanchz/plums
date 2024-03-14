@@ -1,6 +1,6 @@
 "use client";
 import "./styles.css";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import data from "./data.json";
 import ExampleTheme from "./ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -64,15 +64,16 @@ const initialData = JSON.stringify(data);
 
 interface EditorProps {
   noteId: string;
+  title: string;
   isEditMode: boolean;
   content?: string;
   setContentNote?: (note: string) => void;
   onNoteAdded?: any;
 }
 
-export default function Editor({noteId, isEditMode, content, setContentNote, onNoteAdded }: EditorProps) {
+export default function Editor({noteId, isEditMode, content, title, setContentNote, onNoteAdded }: EditorProps) {
   const [editorState, setEditorState] = useState<string>();
-
+  const [updated, setUpdated] = useState(false);
   let editorConfig = {
     // The editor theme
     theme: ExampleTheme,
@@ -96,19 +97,20 @@ export default function Editor({noteId, isEditMode, content, setContentNote, onN
       LinkNode,
     ],
     editorState: content,
-    editable: isEditMode,
+    editable: true,
   };
   console.log(noteId)
   async function updateNote(e:any) {
     console.log("update note")
     e.preventDefault();
     try {
+      console.log(titleNote)
       const response = await fetch(`/api/notes/note?noteId=${noteId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({noteId:noteId, content: editorState }),
+        body: JSON.stringify({noteId:noteId, title:titleNote, content: editorState }),
       });
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -121,13 +123,14 @@ export default function Editor({noteId, isEditMode, content, setContentNote, onN
         onNoteAdded();
       }
    
-    
-    
+      setUpdated(true);  
+        
     } catch (error) {
       console.error("Failed to fetch topics:", error);
     }
   }
 
+  const [titleNote, setTitleNote] = useState(title);
   function onChange(editorState:any) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
@@ -141,12 +144,22 @@ export default function Editor({noteId, isEditMode, content, setContentNote, onN
 
   }
    
+  useEffect(()=> {
+    setTitleNote(title)
+  },[])
   
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
+      {updated && <div className="bg-blue-50 p-4 mb-4 flex justify-between">Updated Note
+        <a className="cursor-pointer" onClick={()=>setUpdated(false)}>
+          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-square-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" /><path d="M9 9l6 6m0 -6l-6 6" /></svg>
+        </a>
+      </div>}
+      <input type="text" className="mb-4" value={titleNote} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setTitleNote(e.target.value)}/>
       <div className="editor-container">
-        {isEditMode && <ToolbarPlugin />}
+        
+        <ToolbarPlugin />
         <div className="editor-inner max-h-[500px] overflow-y-auto md:max-w-[800px] md:min-w-[500px]">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}

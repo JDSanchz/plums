@@ -72,12 +72,13 @@ export async function POST(request: Request) {
 //update note
 export async function PUT(request: Request) {
   try {
-    const { noteId, content } = await request.json();
+    const { noteId, content, title } = await request.json();
     const updatedNote = await prisma.notes.update({
       where: {
         id: noteId,
       },
       data: {
+        title: title,
         content: content,
       },
     });

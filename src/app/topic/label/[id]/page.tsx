@@ -10,6 +10,9 @@ import { useParams } from 'next/navigation';
 export default function LabelPage() {
     const { id:currentTopicId } = useParams();
     const [topics, setTopics] = useState<Topic[]>([]);
+    const [newLabel, setNewLabel] = useState('');
+    const [selectedTopicId, setSelectedTopicId] = useState<Topic | null>(null);
+
 
     interface Topic {
       id: string;
@@ -46,6 +49,7 @@ export default function LabelPage() {
         // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
         // This can be a direct state update or a more complex logic depending on your application structure
         fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
+        setSelectedTopicId(topicId);
       };
 
 
@@ -90,11 +94,17 @@ export default function LabelPage() {
             </div> 
             </Link>
         </React.Fragment>
-          )
-        )}
-      </div>
-        </div>  
-    );  
-    }
+          ))}
+        </div>
+      <div>
+      {/* Section to add labels */}
+            <div className="mt-4">
+                <p className="font-semibold">Click on a topic to add a label</p>
+                <div className="flex items-center">
+                </div>
+            </div>    
+        </div>
+    </div>
+    )}
     
       

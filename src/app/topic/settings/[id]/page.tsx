@@ -2,14 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SettingsPage = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState(null);
+  const params = useParams();
   const [children, setChildren] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [parent, setParent] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+const [isEditing, setIsEditing] = useState(false);
+const router = useRouter();
+
+
 
   useEffect(() => {
     fetchTopic(id);
@@ -24,7 +31,77 @@ const SettingsPage = () => {
     }
   }, [searchTerm]);
 
-  const fetchTopic = async (topicId) => {
+  const deleteTopic = async (topicId: any) => {
+    console.log("1 Deleting topic: ", topicId);
+    if (!confirm("Are you sure you want to delete this topic? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      console.log("2 Deleting topic: ", topicId);
+      const response = await fetch(`/api/topics/topic/[id]?topicId=${topicId}`, {
+        method: 'DELETE', // Make sure to use the 'DELETE' HTTP method
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log("Topic deleted successfully");
+      router.push('/dashboard');
+      // Here, you can redirect the user or update the state as needed
+      // For example: window.location.href = '/some/other/page';
+    } catch (error) {
+      console.error("Could not delete the topic: ", error);
+    }
+  };
+
+  const updateTopicTitle = async (topicId, newTitle) => {
+    console.log("1 Updating topic: ", topicId);
+    if (!confirm("Are you sure you want to update this topic's title?")) {
+      return;
+    }
+  
+    try {
+      console.log("2 Updating topic: ", topicId);
+      const response = await fetch(`/api/topics/topic/[id]?topicId=${topicId}`, {
+        method: 'PUT', // Use the 'PUT' HTTP method for updates
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle }), // Send the new title in the request body
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log("Topic title updated successfully");
+      // Here, you can redirect the user or update the UI as needed
+      // For example: window.location.href = '/path/to/redirect';
+    } catch (error) {
+      console.error("Could not update the topic: ", error);
+    }
+  };
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+    setEditTitle(topic?.title || ''); // Initialize with the current title
+  };
+  
+  const saveTitle = async () => {
+    console.log("Saving new title: ", editTitle);
+    if (topic) {
+      await updateTopicTitle(topic.id, editTitle); // Assuming updateTopicTitle is implemented
+      setIsEditing(false); // Exit editing mode after saving
+      // Here, you might want to refetch or update the topic data to reflect the change
+    }
+  };
+  
+  
+
+  const fetchTopic = async (topicId:any) => {
     try {
       const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
         method: 'GET',
@@ -56,7 +133,6 @@ const SettingsPage = () => {
       }
       const data = await response.json();
       setParent(data);
-      console.log(data);
     } catch (error) {
       console.error("Could not fetch the topic: ", error);
     }
@@ -154,8 +230,47 @@ const SettingsPage = () => {
 
   return (
 <div className="p-4">
-  <h2 className="text-2xl font-bold mb-4">Settings for {topic?.title || 'Loading topic...'}</h2>
-  <hr className="mb-4" />
+  <h2 className="text-2xl font-bold mb-4">
+    {isEditing ? (
+      <input
+        type="text"
+        value={editTitle}
+        onChange={(e) => setEditTitle(e.target.value)}
+        className="text-xl font-bold mb-4 p-2 border rounded"
+      />
+    ) : (
+      `Settings for ${topic?.title || 'Loading topic...'}`
+    )}
+  </h2>
+  <div className="flex gap-2">
+    {topic && (
+      <>
+        <button
+          onClick={toggleEdit}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        >
+          {isEditing ? 'Cancel' : 'Edit Title'}
+        </button>
+        {isEditing && (
+          <button
+            onClick={saveTitle}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+          >
+            Save
+          </button>
+        )}
+      </>
+    )}
+    {topic && !isEditing && (
+      <button
+        onClick={() => deleteTopic(topic.id)}
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+      >
+        Delete Topic
+      </button>
+    )}
+  </div>
+  <hr className="mb-4 mt-4" />
    {/* Parent Topic Section */}
    <div className="mb-4">
         {topic?.parentId? (

@@ -199,6 +199,10 @@ const router = useRouter();
     }
   };
 
+  const shareTopic = async (topicId) => {
+    console.log("Sharing topic: ", topicId);
+  }
+
   const handleRemoveChild = async (childId, parentId) => {
     if (!confirm("Are you sure you want to remove this child topic from its parent? This action cannot be undone.")) {
       return;
@@ -267,6 +271,14 @@ const router = useRouter();
         className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
       >
         Delete Topic
+      </button>
+    )}
+        {topic && !isEditing && (
+      <button
+        onClick={() => shareTopic(topic.id)}
+        className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+      >
+        Share
       </button>
     )}
   </div>

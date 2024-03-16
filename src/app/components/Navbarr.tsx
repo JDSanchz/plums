@@ -12,6 +12,7 @@ const Navbar = () => {
   const pathname = usePathname();
   console.log(currentTopicId);
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [newInput, setNewInput] = useState<boolean>(false);
 
   interface Topic {
     id: string;
@@ -41,6 +42,12 @@ const Navbar = () => {
     
     fetchTopics();
   }, [setTopics]);
+
+  useEffect(() => {
+    fetchTopics().then(() => {
+      setNewInput(false); // Reset newInput after topics are fetched
+    });
+  }, [newInput]); // Depend on newInput to trigger re-fetching
 
   // Adjust visibility based on screen width
   useEffect(() => {
@@ -106,11 +113,11 @@ const Navbar = () => {
     };
     
     fetchChildrenTopics();
-  }, [currentTopicId]);
+  }, [currentTopicId, newInput]);
 
   useEffect(() => {
     fetchChildrenTopics(currentTopicId);
-  }, [currentTopicId]);
+  }, [currentTopicId, newInput]);
 
   useEffect(() => {
     if (pathname === '/dashboard') {
@@ -245,7 +252,7 @@ const Navbar = () => {
               </div>
             </div>
             <div className="py-0 pl-4">
-              <NewTopicInput />
+              <NewTopicInput newInput={setNewInput} />
             </div>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">
               {/* Quick Notes SVG icon */}

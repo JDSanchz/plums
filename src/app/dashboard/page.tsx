@@ -6,13 +6,13 @@ import RecentlyOpenedTopics from "../components/recentlyOpenedTopics";
 import { useTopics } from "../components/contexts/TopicProvider";
 
 export default function page() {
-  const { topics, count, setCount } = useTopics();
+  const { topics, setTopics, addTopic, count, setCount } = useTopics();
   console.log(topics)
   return (
     <div>
       
       <div className="block md:hidden">
-        <NewTopicInput />
+        <NewTopicInput newInput={setCount} />
       </div>
       <div className="mt-8 flex flex-grow flex-wrap gap-4">
         <RecentlyOpenedTopics />

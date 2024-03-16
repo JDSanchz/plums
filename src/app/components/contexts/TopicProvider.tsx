@@ -1,6 +1,6 @@
 // contexts/TopicContext.tsx
 "use client";
-import React, { createContext, useContext, ReactNode, useState } from "react";
+import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { Topic } from "../../models/Topic";
 
 interface TopicContextType {
@@ -17,6 +17,7 @@ export const useTopics = (): TopicContextType => {
   const context = useContext(TopicContext);
   if (context === undefined) {
     throw new Error("useTopics must be used within a TopicProvider");
+    console.log("useTopics must be used within a TopicProvider");
   }
   return context;
 };
@@ -28,6 +29,25 @@ interface TopicProviderProps {
 export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [count, setCount] = useState(0);
+
+  const fetchTopics = async () => {
+    try {
+      const response = await fetch("/api/topics");
+      if (!response.ok) {
+        throw new Error(`Error fetching topics: ${response.status}`);
+      }
+      const fetchedTopics = await response.json();
+      setTopics(fetchedTopics);
+    } catch (error) {
+      console.error("Failed to fetch topics:", error);
+    }
+  };
+
+  // useEffect to call fetchTopics when the component mounts
+  useEffect(() => {
+    fetchTopics();
+  }, []); // Empty dependency array ensures this runs once on mount
+
 
   const addTopic = async (
     data: Omit<Topic, "id" | "createdAt" | "updatedAt" | "lastAccessed">,

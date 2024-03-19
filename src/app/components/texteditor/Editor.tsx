@@ -47,7 +47,7 @@ function MyCustomAutoFocusPlugin() {
 
 // When the editor changes, you can get notified via the
 // OnChangePlugin!
-function MyOnChangePlugin({ onChange }) {
+function MyOnChangePlugin({ onChange }:any) {
   // Access the editor through the LexicalComposerContext
   const [editor] = useLexicalComposerContext();
   // Wrap our listener in useEffect to handle the teardown and avoid stale references.
@@ -76,7 +76,7 @@ export default function Editor({key, isEditMode, content, setContentNote }: Edit
     // The editor theme
     theme: ExampleTheme,
     // Handling of errors during update
-    onError(error) {
+    onError(error:any) {
       throw error;
     },
     // Any custom nodes go here
@@ -97,7 +97,7 @@ export default function Editor({key, isEditMode, content, setContentNote }: Edit
     editable: isEditMode,
   };
 
-  function onChange(editorState) {
+  function onChange(editorState:any) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
     // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify

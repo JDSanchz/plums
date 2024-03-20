@@ -2,7 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { useTopics } from "./contexts/TopicProvider";
 import { Topic } from "../models/Topic";
-export default function NewTopicInput() {
+
+
+interface Props {
+  newInput: any;
+}
+
+export default function NewTopicInput({ newInput }: Props) {
   const [isInput, setIsInput] = useState<Boolean>(false);
   const [newTopic, setNewTopic] = useState("");
   const { topics, addTopic } = useTopics();
@@ -41,6 +47,7 @@ export default function NewTopicInput() {
               if (event.key === "Enter") {
                 if (newTopic !== "") {
                   addTopic({ title: newTopic });
+                  newInput(true);
                   setIsInput(!isInput);
                 } else {
                   window.alert("Please enter a topic name");
@@ -58,6 +65,7 @@ export default function NewTopicInput() {
             onClick={(event) => {
               if (newTopic !== "") {
                 addTopic({ title: newTopic });
+                newInput(true);
                 setIsInput(!isInput);
               } else {
                 window.alert("Please enter a topic name");

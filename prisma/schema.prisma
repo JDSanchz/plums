@@ -35,23 +35,23 @@ model AddLabel {
 }
 
 model FileUpload {
-  id        String   @id @default(uuid())
-  title     String
-  filename  String // Added field for filename
-  mimeType  String // Added field for MIME type
-  size      Int // Added field for file size
-  data      Bytes // Added field for binary data
-  createdAt DateTime @default(now())
-  topicId   String   @map("topic_id") // Foreign key referencing the Topic model
-  topic     Topic    @relation(fields: [topicId], references: [id])
+  id          String   @id @default(uuid())
+  title       String
+  filename    String
+  mimeType    String
+  size        Int
+  data        Bytes
+  createdAt   DateTime @default(now())
+  topicId     String?  @map("topic_id")
+  topic       Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
 }
 
 model Notes {
   id      String @id @default(uuid())
   title   String
   content String
-  topicId String @map("topic_id") // Foreign key referencing the Topic model
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId String? @map("topic_id")
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 }
 
 model Links {
@@ -59,6 +59,7 @@ model Links {
   title   String
   url     String
   desc    String
-  topicId String @map("topic_id") // Foreign key referencing the Topic model
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId String? @map("topic_id")
+  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 }
+

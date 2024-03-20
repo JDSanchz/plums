@@ -98,3 +98,42 @@ export async function PUT(request: Request) {
     });
   }
 }
+
+
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const noteId = url.searchParams.get("noteId");
+
+    if (!noteId) {
+      return new Response(JSON.stringify({ error: "Note ID is required" }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const deleteNote = await prisma.notes.delete({
+      where: {
+        id: noteId,
+      },
+    });
+
+    return new Response(JSON.stringify(deleteNote), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  catch (e) {
+    console.error("Error deleting note: ", e);
+    return new Response(JSON.stringify({ error: "Unable to delete note" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}

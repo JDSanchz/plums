@@ -20,9 +20,34 @@ export default function Notes() {
 
   const [refreshNotes, setRefreshNotes] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState('');
   const params = useParams();
+  const [deletePopUp, setDeletePopUp] = useState(false);
+  const deleteNote = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notes/note?noteId=${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      setRefreshNotes((prev) => !prev);
+      setDeletePopUp(false);
+    } catch (error) {
+      console.error("Failed to fetch topics:", error);
+    }
+  }
 
-  
+  const confirmDelete = (id: string) => {
+    setDeletePopUp(true);
+    setNoteToDelete(id);
+   
+  }
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -69,8 +94,20 @@ export default function Notes() {
 
   // console.log(noteData)
   return (
-    <div className="flex flex-col flex-wrap md:flex-row gap-8">
-  
+    <div className="flex relative flex-col flex-wrap md:flex-row gap-8">
+      {deletePopUp && 
+        
+        <div className="absolute z-30 shadow-md left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%] right-auto bg-white p-8 border rounded-md">
+        <p className="font-medium">Are you sure you want to delete this note?</p>
+        <div className="flex gap-3 mt-4">
+          <button className="bg-red-100 rounded-sm px-4 py-1" onClick={()=> deleteNote(noteToDelete)}>Delete</button>
+          <button className="bg-zinc-200 px-4 py-1"
+            onClick={() => {setDeletePopUp(false); setNoteToDelete('')}}
+          >Cancel</button>
+        </div>
+        </div>
+       
+      }
 
       <div className="flex flex-wrap flex-col gap-4">
         <div className="max-h-[300px] flex flex-col gap-4 py-3 px-2 overflow-y-auto">
@@ -100,8 +137,8 @@ export default function Notes() {
                 </svg>
                 <h1 className="text-sm" key={note.id}>{note.title}</h1>
                 </div>
-                <span>
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-backspace"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5z" /><path d="M12 10l4 4m0 -4l-4 4" /></svg>
+                <span onClick={()=>confirmDelete(note.id)}>
+                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  className="icon icon-tabler icons-tabler-filled icon-tabler-backspace"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z" /></svg>
                 </span>
               </div>
             </a>

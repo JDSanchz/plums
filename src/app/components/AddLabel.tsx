@@ -26,10 +26,11 @@ useEffect(() => {
       } else {
         setSearchResults([]);
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm])
 
 
-const fetchTopic = async (topicId) => {
+const fetchTopic = async (topicId: any) => {
     try {
       const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
         method: 'GET',
@@ -47,7 +48,7 @@ const fetchTopic = async (topicId) => {
     }
   };
 
-  const fetchLabel = async (topicId) => {
+  const fetchLabel = async (topicId: any) => {
     try {
       const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
         method: 'GET',
@@ -83,7 +84,7 @@ const fetchTopic = async (topicId) => {
     }
   };
 
-  const handleAddLabel = async (labelId, topicId) => {
+  const handleAddLabel = async (labelId: any, topicId: any) => {
        try {
             const response = await fetch(`/api/label/addlabel`, {
               method: 'POST',
@@ -91,8 +92,8 @@ const fetchTopic = async (topicId) => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ 
-                labelId: labelId, 
                 topicId: topicId, 
+                labelId: labelId, 
             }),
             });
             if (!response.ok) {
@@ -106,7 +107,7 @@ const fetchTopic = async (topicId) => {
        }
   };
 
-  const handleRemoveLabel = async (labelId, topicId) => {
+  const handleRemoveLabel = async (labelId: any, topicId: any) => {
     if (!window.confirm('Are you sure you want to remove this label?')) {
       return;
     }

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../app/components/Navbarr";
 import { TopicProvider } from "./components/contexts/TopicProvider";
 const inter = Inter({ subsets: ["latin"] });
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,6 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <UserProvider>
       <TopicProvider>
         <body className={inter.className}>
           <div className="flex flex-col md:flex-row h-screen w-screen">
@@ -25,6 +27,7 @@ export default function RootLayout({
           </div>
         </body>
       </TopicProvider>
+      </UserProvider>
     </html>
   );
 }

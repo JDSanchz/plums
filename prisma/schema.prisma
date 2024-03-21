@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
 model Topic {
   id           String       @id @default(uuid())
   title        String
@@ -20,24 +26,24 @@ model Topic {
   Notes        Notes[]
   Links        Links[]
   parentId     String?      @map("parent_id")
-  parent       Topic?       @relation("TopicToTopic", fields: [parentId], references: [id], onDelete: SetNull) 
+  parent       Topic?       @relation("TopicToTopic", fields: [parentId], references: [id], onDelete: SetNull)
   children     Topic[]      @relation("TopicToTopic")
 }
 
 model FileUpload {
-  id          String   @id @default(uuid())
-  title       String
-  filename    String
-  mimeType    String
-  size        Int
-  data        Bytes
-  createdAt   DateTime @default(now())
-  topicId     String?  @map("topic_id")
-  topic       Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  id        String   @id @default(uuid())
+  title     String
+  filename  String
+  mimeType  String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
+  topicId   String?  @map("topic_id")
+  topic     Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
 }
 
 model Notes {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   title   String
   content String
   topicId String? @map("topic_id")
@@ -45,11 +51,10 @@ model Notes {
 }
 
 model Links {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   title   String
   url     String
   desc    String
   topicId String? @map("topic_id")
   topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: SetNull)
 }
-

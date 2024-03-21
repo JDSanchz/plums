@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import { useUser } from '@auth0/nextjs-auth0/client';
 import NewTopicInput from "./NewTopicInput";
 import { usePathname } from "next/navigation";
 import { lastAccessed } from "./services/recents";
@@ -10,9 +11,9 @@ const Navbar = () => {
   const { id:currentTopicId } = useParams();
   const [childrenTopics, setChildrenTopics] = useState<Topic[]>([]);
   const pathname = usePathname();
-  console.log(currentTopicId);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [newInput, setNewInput] = useState<boolean>(false);
+  const { user, error, isLoading } = useUser();
 
   interface Topic {
     id: string;
@@ -133,36 +134,23 @@ const Navbar = () => {
     fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
   };
 
-  return (
+
+  return  (
     <div
       className={`w-full md:w-[310px] flex flex-col bg-gray-100 text-gray-900 ${pathname === "/" ? "hidden" : ""}`}
     >
       <div className="flex items-center bg-purple-600 p-4 text-white">
+        {/* Display the user's initial or a default letter */}
         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
-          R
+          {user ? user.name[0].toUpperCase() : 'X'}
         </div>
-        <span>Ronald’s space</span>
+        {/* Display the user's name or a default message */}
+        <span>{user ? `${user.name}'s space` : "User's space"}</span>
         <button
           onClick={toggleMenuVisibility}
           className="ml-auto cursor-pointer border-none bg-transparent md:hidden"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="icon icon-tabler icon-tabler-menu-2"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M4 6l16 0" />
-            <path d="M4 12l16 0" />
-            <path d="M4 18l16 0" />
-          </svg>
+          {/* SVG for the button */}
         </button>
       </div>
       {/* Conditional rendering based on isMenuVisible */}
@@ -254,10 +242,11 @@ const Navbar = () => {
             <div className="py-0 pl-4">
               <NewTopicInput newInput={setNewInput} />
             </div>
-            <a href="#" className="flex items-center p-4 hover:bg-gray-200">
-              {/* Quick Notes SVG icon */}
-              Quick Notes
+            <a href="/api/auth/login" className="flex items-center p-4 hover:bg-gray-200">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-user mr-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                Login
             </a>
+            <a href="/api/auth/logout">Logout</a>
             <a href="#" className="flex items-center p-4 hover:bg-gray-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

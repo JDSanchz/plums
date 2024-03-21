@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Head from "next/head";
 
+
 export default function Home() {
   return (
     <div className="mt-8 w-full flex flex-col items-center justify-center text-center">

@@ -43,30 +43,10 @@ export async function POST(request: Request) {
 }
 
 
-
+// FUNCTION TO GET ALL LABELS
 export async function GET(request: Request) {
-    const url = new URL(request.url);
-    const topicId = url.searchParams.get("topicId");
-
-    if (!topicId) {
-        return new Response(
-            JSON.stringify({ error: "topicId query parameter is required" }),
-            {
-                status: 400,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            },
-        );
-    }
-
     try {
-        const labels = await prisma.label.findMany({
-            where: {
-                topicId: topicId,
-            },
-        });
-
+        const labels = await prisma.label.findMany();
         return new Response(JSON.stringify(labels), {
             status: 200,
             headers: {

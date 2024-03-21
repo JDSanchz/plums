@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 export default function LabelPage() {
     const { id:currentTopicId } = useParams();
     const [topics, setTopics] = useState<Topic[]>([]);
+    const [Labels, setLabels] = useState('');
     const [newLabel, setNewLabel] = useState('');
     const [selectedTopicId, setSelectedTopicId] = useState<Topic | null>(null);
 
@@ -51,6 +52,25 @@ export default function LabelPage() {
         fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
         setSelectedTopicId(topicId);
       };
+
+      // Fetch all labels
+      const fetchLabels = async () => {
+        try {
+          const response = await fetch("/api/labels");
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const data = await response.json();
+          setLabels(data);
+        } catch (error) {
+          console.error("Failed to fetch labels:", error);
+        }
+      };
+
+      useEffect(() => {
+        fetchLabels();
+      }, [setLabels]);
+
 
       const createNewLabel = async (newLabel: string) => {
         try {

@@ -4,11 +4,11 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {
-        const { topicId, label } = await request.json();
+        const { title } = await request.json(); 
 
-        if(!topicId || !label) {
+        if (!title) {
             return new Response(
-                JSON.stringify({ error: "All fields are required" }),
+                JSON.stringify({ error: "Title is required" }), 
                 {
                     status: 400,
                     headers: {
@@ -18,30 +18,30 @@ export async function POST(request: Request) {
             );
         }
 
+        // Create the new label using Prisma
         const newLabel = await prisma.addLabel.create({
             data: {
-                title: label,
-                topicId: topicId,
+                title: title,
             },
-        });
+        })
 
         return new Response(JSON.stringify(newLabel), {
             status: 201,
             headers: {
                 "Content-Type": "application/json",
             },
-        })
-
-        } catch (e) {
-            console.error(e);
-            return new Response(JSON.stringify({ error: "Unable to create label" }), {
-                status: 500,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-        }
+        });
+    } catch (e) {
+        console.error(e);
+        return new Response(JSON.stringify({ error: "Unable to create label" }), {
+            status: 500,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
 }
+
 
 
 export async function GET(request: Request) {

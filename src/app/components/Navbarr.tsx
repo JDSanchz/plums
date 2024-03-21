@@ -258,7 +258,7 @@ const Navbar = () => {
               {/* Quick Notes SVG icon */}
               Quick Notes
             </a>
-            <Link href={`/topic/label/${topics?.title}`} className="flex items-center p-4 hover:bg-gray-200">
+            <Link href={`/topic/label/`} className="flex items-center p-4 hover:bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" 
               className="icon icon-tabler icon-tabler-tags mr-2" 
               width="24" height="24" viewBox="0 0 24 24" 

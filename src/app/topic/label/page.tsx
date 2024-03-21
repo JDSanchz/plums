@@ -52,6 +52,32 @@ export default function LabelPage() {
         setSelectedTopicId(topicId);
       };
 
+      const createNewLabel = async (newLabel: string) => {
+        try {
+          const response = await fetch("/api/labels", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: newLabel
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          // Optionally handle the response data here
+          const data = await response.json();
+          console.log("New label created:", data);
+          
+        } catch (error) {
+          console.error("Failed to create label:", error);
+        }
+      }
+      
+
 
     return (
         <div className="p-4">
@@ -99,7 +125,12 @@ export default function LabelPage() {
       <div>
       {/* Section to add labels */}
             <div className="mt-4">
-                <p className="font-semibold">Click on a topic to add a label</p>
+                <p className="font-semibold"> Create new Label </p>
+                <input
+                placeholder="Enter label name"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => createNewLabel(newLabel)}> Add </button>
                 <div className="flex items-center">
                 </div>
             </div>    

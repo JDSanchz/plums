@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         }
 
         // Create the new label using Prisma
-        const newLabel = await prisma.addLabel.create({
+        const newLabel = await prisma.label.create({
             data: {
                 title: title,
             },
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
     }
 
     try {
-        const labels = await prisma.addLabel.findMany({
+        const labels = await prisma.label.findMany({
             where: {
                 topicId: topicId,
             },

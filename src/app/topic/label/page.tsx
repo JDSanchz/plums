@@ -76,6 +76,7 @@ export default function LabelPage() {
               title: newLabel
             })
           });
+          fetchLabels();
           
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -143,6 +144,8 @@ export default function LabelPage() {
                 placeholder="Enter label name"
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 onChange={(e) => setNewLabel(e.target.value)}
+                type="text"
+                required
                 />
                 <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => createNewLabel(newLabel)}> Add </button>
                 <div className="flex items-center">

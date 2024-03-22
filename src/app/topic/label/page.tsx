@@ -9,10 +9,11 @@ import { useParams } from 'next/navigation';
 
 export default function LabelPage() {
     const { id:currentTopicId } = useParams();
+    const { id:currentLabelId } = useParams();
     const [topics, setTopics] = useState<Topic[]>([]);
-    const [Labels, setLabels] = useState('');
+    const [Labels, setLabels] = useState<Label[]>([]);
     const [newLabel, setNewLabel] = useState('');
-    const [selectedTopicId, setSelectedTopicId] = useState<Topic | null>(null);
+    const [selectedLabelId, setSelectedLabelId] = useState<Label | null>(null);
 
 
     interface Topic {
@@ -24,34 +25,16 @@ export default function LabelPage() {
       updatedAt: string;
       children: Topic[];
     }
-    
-    const fetchTopics = async () => {
-        try {
-          const response = await fetch("/api/topics");
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-          const data = await response.json();
-          const sortedData = data.sort((a: { lastAccessed: string | number | Date; }, b: { lastAccessed: string | number | Date; }) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime());;
-          setTopics(sortedData);
-        } catch (error) {
-          console.error("Failed to fetch topics:", error);
-        }
-      };
-    
-      useEffect(() => {
-        
-        fetchTopics();
-      }, [setTopics]);
 
-      const handleTopicClick = async (topicId: any) => {
-        // Update the lastAccessed time locally or through your service
-        await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
-        // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
-        // This can be a direct state update or a more complex logic depending on your application structure
-        fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
-        setSelectedTopicId(topicId);
-      };
+    interface Label {
+      id: string;
+      title: string;
+      createdAt: Date;
+      updatedAt: Date;
+      topicId: number;
+    }
+    
+
 
       // Fetch all labels
       const fetchLabels = async () => {
@@ -61,7 +44,8 @@ export default function LabelPage() {
             throw new Error(`Error: ${response.status}`);
           }
           const data = await response.json();
-          setLabels(data);
+          const sortedData = data.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          setLabels(sortedData);
         } catch (error) {
           console.error("Failed to fetch labels:", error);
         }
@@ -70,6 +54,15 @@ export default function LabelPage() {
       useEffect(() => {
         fetchLabels();
       }, [setLabels]);
+
+      const handleTopicClick = async (labelId: any) => {
+        // Update the lastAccessed time locally or through your service
+        await lastAccessed({ id: labelId, lastAccessed: new Date().toISOString() });
+        // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
+        // This can be a direct state update or a more complex logic depending on your application structure
+        fetchLabels(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
+        setSelectedLabelId(labelId);
+      };
 
 
       const createNewLabel = async (newLabel: string) => {
@@ -101,8 +94,8 @@ export default function LabelPage() {
 
     return (
         <div className="p-4">
-            <p className="font-semibold">Labels Page</p>
-            {topics === undefined && (
+            <p className="font-semibold">Labels currently logged</p>
+            {Labels === undefined && (
                 <div role="status" className="max-w-sm animate-pulse mt-6">
                   <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
                   <div className="h-2.5 bg-gray-200 rounded-full mb-4"></div>
@@ -111,12 +104,12 @@ export default function LabelPage() {
                 </div>
               )}
               <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
-              {topics?.map((topic) => (
-        <React.Fragment key={topic.id}>
-          <Link href={`/topic/${topic.id}`}>
+              {Labels?.map((Label) => (
+        <React.Fragment key={Label.id}>
+          <Link href={`/topic/${Label.id}`}>
             <div
-              className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
-              onClick={() => handleTopicClick(topic.id)}>
+              className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${Label.id === currentLabelId ? 'bg-purple-300' : ''}`}
+              onClick={() => handleTopicClick(Label.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-library"
@@ -136,7 +129,7 @@ export default function LabelPage() {
                           <path d="M11 10h6" />
                           <path d="M11 13h3" />
                         </svg>
-                        <p className="truncate">{topic.title}</p>
+                        <p className="truncate">{Label.title}</p>
             </div> 
             </Link>
         </React.Fragment>

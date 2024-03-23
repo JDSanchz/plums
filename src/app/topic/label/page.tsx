@@ -55,13 +55,19 @@ export default function LabelPage() {
         fetchLabels();
       }, [setLabels]);
 
-      const handleTopicClick = async (labelId: any) => {
-        // Update the lastAccessed time locally or through your service
-        await lastAccessed({ id: labelId, lastAccessed: new Date().toISOString() });
-        // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
-        // This can be a direct state update or a more complex logic depending on your application structure
-        fetchLabels(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
-        setSelectedLabelId(labelId);
+      const handleTopicDelete = async (labelId: any) => {
+        //Delete the topic when the delete button is clicked
+        try {
+          const response = await fetch(`/api/labels/${labelId}`, {
+            method: "DELETE",
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          fetchLabels();
+        } catch (error) {
+          console.error("Failed to delete topic:", error);
+        }
       };
 
 
@@ -107,10 +113,10 @@ export default function LabelPage() {
               <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
               {Labels?.map((Label) => (
         <React.Fragment key={Label.id}>
-          <Link href={`/topic/${Label.id}`}>
+          <Link href={`/topic/label`}>
             <div
               className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${Label.id === currentLabelId ? 'bg-purple-300' : ''}`}
-              onClick={() => handleTopicClick(Label.id)}>
+              onClick={() => handleTopicDelete(Label.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-library"
@@ -131,6 +137,22 @@ export default function LabelPage() {
                           <path d="M11 13h3" />
                         </svg>
                         <p className="truncate">{Label.title}</p>
+                        <svg  
+                        xmlns="http://www.w3.org/2000/svg"  
+                        width="24"  
+                        height="24"  
+                        viewBox="0 0 24 24"  
+                        fill="none"  
+                        stroke="currentColor"  
+                        stroke-width="1.25"  
+                        stroke-linecap="round"  
+                        stroke-linejoin="round"  
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-backspace"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5z" />
+                          <path d="M12 10l4 4m0 -4l-4 4" />
+                          </svg>
             </div> 
             </Link>
         </React.Fragment>

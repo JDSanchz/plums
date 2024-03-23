@@ -8,7 +8,7 @@ export async function DELETE(request: Request) {
         const pathSegments = url.pathname.split("/"); // This splits the path into segments
         const labelId = pathSegments[pathSegments.length - 1]; // Gets the last segment, which should be the ID
 
-        const deleteLabel = await prisma.addLabel.delete({
+        const deleteLabel = await prisma.label.delete({
             where: {
                 id: labelId,
             },

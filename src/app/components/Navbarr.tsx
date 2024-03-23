@@ -25,27 +25,28 @@ const Navbar = () => {
     children: Topic[];
   }
 
-  const fetchTopics = async () => {
+  const fetchTopics = async (userId:any) => {
     try {
-      const response = await fetch("/api/topics");
+      const response = await fetch(`/api/topics?userId=${userId}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      const sortedData = data.sort((a: { lastAccessed: string | number | Date; }, b: { lastAccessed: string | number | Date; }) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime());;
+      const sortedData = data.sort((a: { lastAccessed: string | number | Date; }, b: { lastAccessed: string | number | Date; }) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime());
       setTopics(sortedData);
     } catch (error) {
       console.error("Failed to fetch topics:", error);
     }
   };
+  
+  useEffect(() => {
+    if (user) { // Ensure user is defined
+      fetchTopics(user?.sub);
+    }
+  }, [setTopics, user?.sub,currentTopicId]); // React to changes in user.sub
 
   useEffect(() => {
-    
-    fetchTopics();
-  }, [setTopics]);
-
-  useEffect(() => {
-    fetchTopics().then(() => {
+    fetchTopics(user?.sub).then(() => {
       setNewInput(false); // Reset newInput after topics are fetched
     });
   }, [newInput]); // Depend on newInput to trigger re-fetching
@@ -121,17 +122,18 @@ const Navbar = () => {
   }, [currentTopicId, newInput]);
 
   useEffect(() => {
-    if (pathname === '/dashboard') {
-      fetchTopics(); // Fetch and sort topics when navigating to dashboard
+    if (pathname === '/dashboard' && user?.sub) {
+      fetchTopics(user.sub);
     }
-  }, [pathname]);
+  }, [pathname, user?.sub]);
+  
   
   const handleTopicClick = async (topicId: any) => {
     // Update the lastAccessed time locally or through your service
     await lastAccessed({ id: topicId, lastAccessed: new Date().toISOString() });
     // Then, fetch or update the topics list directly here if not using `useEffect` to automatically trigger re-fetching
     // This can be a direct state update or a more complex logic depending on your application structure
-    fetchTopics(); // Assuming this function now directly sorts and sets topics without relying solely on `count`
+    fetchTopics(user?.sub); // Assuming this function now directly sorts and sets topics without relying solely on `count`
   };
 
 

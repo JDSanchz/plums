@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useTopics } from "./contexts/TopicProvider";
 import { Topic } from "../models/Topic";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 interface Props {
@@ -12,6 +13,8 @@ export default function NewTopicInput({ newInput }: Props) {
   const [isInput, setIsInput] = useState<Boolean>(false);
   const [newTopic, setNewTopic] = useState("");
   const { topics, addTopic } = useTopics();
+  const { user } = useUser();
+
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -46,7 +49,7 @@ export default function NewTopicInput({ newInput }: Props) {
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 if (newTopic !== "") {
-                  addTopic({ title: newTopic });
+                  addTopic({ title: newTopic }, user?.sub);
                   newInput(true);
                   setIsInput(!isInput);
                 } else {
@@ -64,7 +67,7 @@ export default function NewTopicInput({ newInput }: Props) {
             className="cursor-pointer rounded p-1 hover:bg-gray-200"
             onClick={(event) => {
               if (newTopic !== "") {
-                addTopic({ title: newTopic });
+                addTopic({ title: newTopic }, user?.sub);
                 newInput(true);
                 setIsInput(!isInput);
               } else {

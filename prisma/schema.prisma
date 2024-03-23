@@ -10,36 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-}
-
 model Topic {
-  id           String     @id @default(uuid())
-  title        String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  lastAccessed DateTime   @default(now())
-  FileUpload   FileUpload[]
-  Notes        Notes[]
-  Links        Links[]
-  parentId     String?    @map("parent_id")
-  parent       Topic?     @relation(name: "ParentChildren", fields: [parentId], references: [id])
-  children     Topic[]    @relation(name: "ParentChildren")
-  labelId      String?    // This is the foreign key referencing Label
-  label        Label?     @relation(fields: [labelId], references: [id]) // Correctly setup relation
+  id            String       @id @default(uuid())
+  title         String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  lastAccessed  DateTime     @default(now())
+  FileUpload    FileUpload[]
+  Notes         Notes[]
+  Links         Links[]
+  parentId      String?      @map("parent_id")
+  parent        Topic?       @relation(name: "ParentChildren", fields: [parentId], references: [id])
+  children      Topic[]      @relation(name: "ParentChildren")
+  auth0_user_id String?
+  labelId       String? // This is the foreign key referencing Label
+  label         Label?       @relation(fields: [labelId], references: [id]) // Correctly setup relation
 }
 
 model Label {
-  id          String   @id @default(uuid())
-  title       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  topics      Topic[]  // This implicitly creates a one-to-many relation from Label to Topic
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  topics    Topic[] // This implicitly creates a one-to-many relation from Label to Topic
 }
-
 
 model FileUpload {
   id        String   @id @default(uuid())

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import AddLabel from '@/app/components/AddLabel';
 
 const SettingsPage = () => {
   const { id } = useParams();
@@ -342,8 +343,12 @@ const router = useRouter();
         ))}
       </ul>
     </div>
+    <div>
+      <AddLabel />
+    </div>
   </div>
 </div>
+
 
   );
 };

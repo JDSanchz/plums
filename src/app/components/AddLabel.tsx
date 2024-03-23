@@ -14,6 +14,7 @@ const AddLabel = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
+
   const params = useParams();
 // useEffect(() => {
 //     fetchTopic(id);
@@ -94,8 +95,9 @@ const fetchTopic = async (topicId: any) => {
     if (!window.confirm('Are you sure you want to remove this label?')) {
       return;
     }
+    console.log(labelId, topicId)
     try {
-      const response = await fetch(`/api/label/removelabel`, {
+      const response = await fetch(`/api/topics/removelabel`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +119,7 @@ const fetchTopic = async (topicId: any) => {
 
 };
 
-  console.log(topic?.labelId)
+  
 return (
   <div className="p-4">
     <h2 className="text-2xl font-bold mb-4">Label for {topic?.title || 'Loading labels...'}</h2>
@@ -128,7 +130,7 @@ return (
         </div>
         <div className="mb-6">
           <div>
-         
+          <div className="flex gap-2">
             <div className='flex items-center bg-gray-50 border w-fit p-2 rounded'>
               <svg  xmlns="http://www.w3.org/2000/svg"  
                 width="18"  height="18"  viewBox="0 0 24 24"  
@@ -141,6 +143,12 @@ return (
                 </svg>
               {labels.find(label => label.id === topic?.labelId) ? <p>{labels.find(label => label.id === topic?.labelId).title}</p> : <p>Label not found.</p>}
             </div>
+            <button 
+            onClick={()=> handleRemoveLabel(topic?.labelId, params.id)}
+            className="bg-red-600 text-white border rounded px-2">
+              Remove label
+            </button>
+          </div>
             
           </div>
           </div>

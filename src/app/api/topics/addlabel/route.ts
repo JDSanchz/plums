@@ -5,8 +5,6 @@ const prisma = new PrismaClient()
 export async function PUT(request: Request) {
     try {
         const { topicId, labelId } = await request.json()
-        console.log(topicId)
-        console.log(labelId)
         const updatedTopic = await prisma.topic.update({
             where: {
                 id: topicId,

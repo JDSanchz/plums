@@ -14,16 +14,17 @@ const SettingsPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [parent, setParent] = useState(null);
   const [editTitle, setEditTitle] = useState('');
-const [isEditing, setIsEditing] = useState(false);
-const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
 
 
 
   useEffect(() => {
     fetchTopic(id);
     fetchChildren(id);
-  }, [id,children]);
-
+  },[])
+  // }, [id,children]); Removed this line because it was making too many requests - Ronald
+ 
   useEffect(() => {
     if (searchTerm !== '') {
       handleSearch();
@@ -175,6 +176,8 @@ const router = useRouter();
       console.error("Could not search topics: ", error);
     }
   };
+
+ 
 
   const handleAddChild = async (childId, parentId) => {
     try {

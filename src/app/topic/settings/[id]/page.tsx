@@ -9,12 +9,12 @@ import { Topic } from '@/app/models/Topic';
 
 const SettingsPage = () => {
   const { id } = useParams();
-  const [topic, setTopic] = useState<Topic|null>(null);
+  const [topic, setTopic] = useState<Topic | null>(null);
   const params = useParams();
-  const [children, setChildren] = useState([]);
+  const [children, setChildren] = useState<any>();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [parent, setParent] = useState(null);
+  const [parent, setParent] = useState<any | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -35,7 +35,7 @@ const SettingsPage = () => {
     }
   }, [searchTerm]);
 
-  const deleteTopic = async (topicId:Topic) => {
+  const deleteTopic = async (topicId:any) => {
     console.log("1 Deleting topic: ", topicId);
     if (!confirm("Are you sure you want to delete this topic? This action cannot be undone.")) {
       return;
@@ -304,7 +304,7 @@ const SettingsPage = () => {
   <h3 className="font-semibold text-lg mb-2">Children Topics:</h3>
   {children.length > 0 ? (
   <ul className="list-disc pl-5">
-    {children.map((child) => (
+    {children.map((child:any) => (
       <li key={child.id} className="flex justify-between mb-1">
         {/* Wrap the child title in a Link component */}
         <Link href={`../${child.id}`} passHref>
@@ -336,11 +336,11 @@ const SettingsPage = () => {
         className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
       <ul className="list-none">
-        {searchResults.map(result => (
+        {searchResults.map((result:any) => (
           <li key={result.id} className="flex justify-between items-center mb-2">
             <span className="mr-2">{result.title}</span>
             <button
-              onClick={() => handleAddChild(result.id, topic.id)}
+              onClick={() => handleAddChild(result.id, topic?.id)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               Add

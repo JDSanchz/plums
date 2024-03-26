@@ -7,11 +7,12 @@ import { useTopics } from "../components/contexts/TopicProvider";
 
 export default function page() {
   const { topics, setTopics, addTopic, count, setCount } = useTopics();
-  console.log(topics)
+
   return (
     <div>
       
       <div className="block md:hidden">
+
         <NewTopicInput newInput={setCount} />
       </div>
       <div className="mt-8 flex flex-grow flex-wrap gap-4">

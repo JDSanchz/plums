@@ -8,7 +8,7 @@ import { Topic } from "../models/Topic";
 const RecentlyOpenedTopics: React.FC = () => {
   const { topics, count, setCount } = useTopics();
   const [recentTopics, setrecentTopics] = useState<Topic[]>([]); // Fix: Provide the correct type for the initial state
-
+  console.log(topics)
   useEffect(() => {
     setrecentTopics(
       topics

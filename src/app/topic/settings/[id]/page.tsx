@@ -4,10 +4,12 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AddLabel from '@/app/components/AddLabel';
+import { Topic } from '@/app/models/Topic';
+
 
 const SettingsPage = () => {
   const { id } = useParams();
-  const [topic, setTopic] = useState(null);
+  const [topic, setTopic] = useState<Topic|null>(null);
   const params = useParams();
   const [children, setChildren] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,7 +35,7 @@ const SettingsPage = () => {
     }
   }, [searchTerm]);
 
-  const deleteTopic = async (topicId: any) => {
+  const deleteTopic = async (topicId:Topic) => {
     console.log("1 Deleting topic: ", topicId);
     if (!confirm("Are you sure you want to delete this topic? This action cannot be undone.")) {
       return;
@@ -60,7 +62,7 @@ const SettingsPage = () => {
     }
   };
 
-  const updateTopicTitle = async (topicId, newTitle) => {
+  const updateTopicTitle = async (topicId:any, newTitle:any) => {
     console.log("1 Updating topic: ", topicId);
     if (!confirm("Are you sure you want to update this topic's title?")) {
       return;
@@ -122,7 +124,7 @@ const SettingsPage = () => {
     }
   };
 
-  const fetchParent = async (topicId) => {
+  const fetchParent = async (topicId:any) => {
     try {
       const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
         method: 'GET',
@@ -141,7 +143,7 @@ const SettingsPage = () => {
   };
 
 
-  const fetchChildren = async (topicId) => {
+  const fetchChildren = async (topicId:any) => {
     try {
       const response = await fetch(`/api/topics/children?parentId=${topicId}`, {
         method: 'GET',
@@ -179,7 +181,7 @@ const SettingsPage = () => {
 
  
 
-  const handleAddChild = async (childId, parentId) => {
+  const handleAddChild = async (childId:any, parentId:any) => {
     try {
       const response = await fetch(`/api/topics/addChild`, {
         method: 'POST',
@@ -203,11 +205,11 @@ const SettingsPage = () => {
     }
   };
 
-  const shareTopic = async (topicId) => {
+  const shareTopic = async (topicId:any) => {
     console.log("Sharing topic: ", topicId);
   }
 
-  const handleRemoveChild = async (childId, parentId) => {
+  const handleRemoveChild = async (childId:any, parentId:any) => {
     if (!confirm("Are you sure you want to remove this child topic from its parent? This action cannot be undone.")) {
       return;
     }
@@ -322,9 +324,10 @@ const SettingsPage = () => {
   )}
 </div>
   </div>
-  <div>
+  <div className='flex flex-col md:flex-row w-full'>
+   
+    <div className="flex flex-col space-y-4 p-4 grow">
     <h3 className="font-semibold text-lg mb-2">Add New Child Topic:</h3>
-    <div className="flex flex-col space-y-4">
       <input
         type="text"
         value={searchTerm}
@@ -346,7 +349,7 @@ const SettingsPage = () => {
         ))}
       </ul>
     </div>
-    <div>
+    <div className="grow">
       <AddLabel />
     </div>
   </div>

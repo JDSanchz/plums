@@ -12,6 +12,7 @@ interface TopicContextType {
   setCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
+
 const TopicContext = createContext<TopicContextType | undefined>(undefined);
 
 export const useTopics = (): TopicContextType => {
@@ -32,23 +33,30 @@ export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [count, setCount] = useState(0);
 
-  const fetchTopics = async () => {
+  const { user } = useUser();
+
+  const fetchTopics = async (userid) => {
+   if (user) {
     try {
-      const response = await fetch("/api/topics");
+      const response = await fetch(`/api/topics?userId=${userid}`);
       if (!response.ok) {
         throw new Error(`Error fetching topics: ${response.status}`);
       }
       const fetchedTopics = await response.json();
+   
       setTopics(fetchedTopics);
     } catch (error) {
       console.error("Failed to fetch topics:", error);
     }
+   }
   };
 
   // useEffect to call fetchTopics when the component mounts
   useEffect(() => {
-    fetchTopics();
-  }, []); // Empty dependency array ensures this runs once on mount
+    if(user) {
+      fetchTopics(user.sub);
+    }
+  }, [user]); // Empty dependency array ensures this runs once on mount
 
 // Update the function signature to accept userId
 const addTopic = async (

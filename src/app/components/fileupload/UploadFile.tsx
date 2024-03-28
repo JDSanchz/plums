@@ -7,10 +7,12 @@ import UploadFiles from './FileUploadForm';
 import Image from 'next/image';
 
 type UploadFileProps = {
+    imageUrl: string;
+    mimeType: any;
     data: any;
-    title: ReactNode;
+    title: any;
     type: any;
-    id: Key | null | undefined;
+    id: any;
     fileUploads: FileUpload[]; // Update the property name
 };
 
@@ -18,6 +20,8 @@ const UploadFile = () => {
     const [fileUploads, setFileUploads] = useState<UploadFileProps[]>([]); // Update the state variable name
     const [error, setError] = useState('');
     const [refreshFiles, setRefreshFiles] = useState(false);
+    const [editMode, setEditMode] = useState<string | null>(null);
+    const [newTitle, setNewTitle] = useState<string>('');
     const params = useParams();
     const topicId = params.id;
     
@@ -32,7 +36,7 @@ const UploadFile = () => {
                     throw new Error('Failed to fetch files');
                 }
                 const data = await response.json();
-                setFileUploads(data.map(file=>({
+                setFileUploads(data.map((file: { data: { data: Iterable<number>; }; mimeType: any; })=>({
                     ...file,
                     imageUrl: file.data ? URL.createObjectURL(new Blob([new Uint8Array(file.data.data)], { type: file.mimeType})) : null
                 }))); // Update the state variable
@@ -42,6 +46,32 @@ const UploadFile = () => {
         };
         fetchFiles(); // Call the updated fetch function
     }, [refreshFiles, topicId]);
+
+    const handleEdit = async (id: string) => {
+        try {
+            const response = await fetch(`/api/files/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title: newTitle }),
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to update file: ${response.status}`);
+            }
+            setEditMode(null);
+            setNewTitle('');
+            const updatedFiles = fileUploads.map(file => {
+                if (file.id === id) {
+                    return { ...file, title: newTitle };
+                }
+                return file;
+        });
+        setFileUploads(updatedFiles);
+        } catch (error) {
+            console.error('Failed to update file:', error);
+        }
+    }
 
 const deleteFile = async (id: string) => {
     try {
@@ -70,7 +100,21 @@ const deleteFile = async (id: string) => {
                     <h2 className='text-2xl font-bold'>Files Uploaded</h2>
                     {fileUploads.map((file) => (
                         <><li className='flex flex-row gap-10' key={file.id as string}>
+                        {editMode === file.id ? (
+                            <input
+                                type="text"
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                            />
+                        ) : (
                             <p>{file.title}</p>
+                        )}
+                        {/* Toggle edit mode */}
+                        {editMode !== file.id ? (
+                            <button onClick={() => setEditMode(file.id)}>Edit</button>
+                        ) : (
+                            <button onClick={() => handleEdit(file.id)}>Save</button>
+                        )}
                             {file.data && file.mimeType && file.mimeType.startsWith('image/')   ? (
                                 <Image src={file.imageUrl} alt={file.title} width={50} height={50} />
                                 ) : (

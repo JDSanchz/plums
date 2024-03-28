@@ -111,10 +111,10 @@ export default function Notes() {
 
       <div className="flex flex-wrap flex-col gap-4">
         <div className="max-h-[300px] flex flex-col gap-4 py-3 px-2 overflow-y-auto">
-        {notes.map((note:any) => {
+        {notes.map((note:any, index:any) => {
           return (
             
-            <a  className="cursor-pointer w-[300px] border border-slate-100 rounded">
+            <a key={index} className="cursor-pointer w-[300px] border border-slate-100 rounded">
               <div className="shadow flex justify-between p-4 gap-4 rounded">
                 <div className="flex gap-2" onClick={() => {setNoteId(note.id)}}>
                 <svg

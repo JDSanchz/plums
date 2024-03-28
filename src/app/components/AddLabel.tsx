@@ -8,9 +8,9 @@ import Link from 'next/link';
 
 const AddLabel = () => {
     const { id } = useParams();
-    const [labels, setLabels] = useState([]);
+    const [labels, setLabels] = useState<any>([]);
     const [newLabel, setNewLabel] = useState([]);
-    const [topic, setTopic] = useState(null);
+    const [topic, setTopic] = useState<any | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
@@ -85,7 +85,7 @@ const fetchTopic = async (topicId: any) => {
             const data = await response.json();
             setTopic(data)
             console.log(data);
-            fetchLabel(topicId);
+            fetchLabels();
        } catch (error) {
             console.error("Could not fetch the topic: ", error);
        }
@@ -141,7 +141,7 @@ return (
                   <path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
                   <path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />
                 </svg>
-              {labels.find(label => label.id === topic?.labelId) ? <p>{labels.find(label => label.id === topic?.labelId).title}</p> : <p>Label not found.</p>}
+              {labels.find((label:any) => label.id === topic?.labelId) ? <p>{labels.find((label:any) => label.id === topic?.labelId).title}</p> : <p>Label not found.</p>}
             </div>
             <button 
             onClick={()=> handleRemoveLabel(topic?.labelId, params.id)}
@@ -155,7 +155,7 @@ return (
           <div>
             <h3 className="text-lg font-semibold mb-2">Add Label:</h3>
             <div className='max-h-[250px] overflow-y-scroll p-3 border rounded max-w-[600px]'>
-              {labels?.map((label)=> {
+              {labels?.map((label:any)=> {
                 return(
                   <div key={label?.id} 
                   className="flex justify-between mb-1

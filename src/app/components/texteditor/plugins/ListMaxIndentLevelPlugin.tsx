@@ -33,11 +33,11 @@ function isIndentPermitted(maxDepth: number) {
     return false;
   }
 
-  const elementNodesInSelection = getElementNodesInSelection(selection);
+  const elementNodesInSelection:any = getElementNodesInSelection(selection);
 
   let totalDepth = 0;
 
-  for (const elementNode of elementNodesInSelection) {
+  for (const elementNode  of elementNodesInSelection) {
     if ($isListNode(elementNode)) {
       totalDepth = Math.max($getListDepth(elementNode) + 1, totalDepth);
     } else if ($isListItemNode(elementNode)) {
@@ -55,7 +55,7 @@ function isIndentPermitted(maxDepth: number) {
   return totalDepth <= maxDepth;
 }
 
-export default function ListMaxIndentLevelPlugin({ maxDepth }) {
+export default function ListMaxIndentLevelPlugin({ maxDepth }:any) {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {

@@ -49,7 +49,7 @@ export default function NewTopicInput({ newInput }: Props) {
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 if (newTopic !== "") {
-                  addTopic({ title: newTopic }, user?.sub);
+                  addTopic({ title: newTopic }, user?.sub? user.sub :"");
                   newInput(true);
                   setIsInput(!isInput);
                 } else {
@@ -67,7 +67,7 @@ export default function NewTopicInput({ newInput }: Props) {
             className="cursor-pointer rounded p-1 hover:bg-gray-200"
             onClick={(event) => {
               if (newTopic !== "") {
-                addTopic({ title: newTopic }, user?.sub);
+                addTopic({ title: newTopic }, user?.sub? user.sub :"");
                 newInput(true);
                 setIsInput(!isInput);
               } else {

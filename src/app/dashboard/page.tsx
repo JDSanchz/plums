@@ -5,7 +5,7 @@ import NewTopicInput from "../components/NewTopicInput";
 import RecentlyOpenedTopics from "../components/recentlyOpenedTopics";
 import { useTopics } from "../components/contexts/TopicProvider";
 
-export default function page() {
+export default function Page() {
   const { topics, setTopics, addTopic, count, setCount } = useTopics();
 
   return (

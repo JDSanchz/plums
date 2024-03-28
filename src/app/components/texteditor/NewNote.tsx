@@ -97,6 +97,7 @@ export default function Editor({setNewNote, newNote, onNoteAdded}: EditorProps) 
     ],
     // editorState: content,
     editable: true,
+    namespace: "editor"
   };
   const params = useParams();
 

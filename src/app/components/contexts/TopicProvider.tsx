@@ -35,7 +35,7 @@ export const TopicProvider: React.FC<TopicProviderProps> = ({ children }) => {
 
   const { user } = useUser();
 
-  const fetchTopics = async (userid) => {
+  const fetchTopics = async (userid:any) => {
    if (user) {
     try {
       const response = await fetch(`/api/topics?userId=${userid}`);

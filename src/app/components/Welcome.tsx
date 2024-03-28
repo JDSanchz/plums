@@ -17,7 +17,7 @@ export default function Welcome() {
           {" "}
           Try adding a new topic ...{" "}
         </p>
-        <NewTopicInput />
+        <NewTopicInput newInput={true} />
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ import ImageForm from "@/app/components/fileupload/FileUploadForm";
 import Link from "next/link";
 export default function Page() {
   const params = useParams();
-  const [topic, setTopic] = useState(null);
+  const [topic, setTopic] = useState<any | null>(null);
   const [links, setLinks] = useState([]); // Add state to track links
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Page() {
 
   // Callback to add a new link
   const handleNewLink = (newLink: any) => {
-    setLinks((prevLinks) => [...prevLinks, newLink]);
+    setLinks((prevLinks):any => [...prevLinks, newLink]);
     // Optionally, you could re-fetch all links instead to ensure sync with the database
     // fetchLinks();
   };

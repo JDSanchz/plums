@@ -95,6 +95,7 @@ export default function Editor({key, isEditMode, content, setContentNote }: Edit
     ],
     editorState: content,
     editable: isEditMode,
+    namespace: key,
   };
 
   function onChange(editorState:any) {

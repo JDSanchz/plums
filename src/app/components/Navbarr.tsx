@@ -144,7 +144,7 @@ const Navbar = () => {
       <div className="flex items-center bg-purple-600 p-4 text-white">
         {/* Display the user's initial or a default letter */}
         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
-          {user ? user.name[0].toUpperCase() : 'X'}
+          {user ? user?.name?.[0]?.toUpperCase() : 'X'}
         </div>
         {/* Display the user's name or a default message */}
         <span>{user ? `${user.name}'s space` : "User's space"}</span>

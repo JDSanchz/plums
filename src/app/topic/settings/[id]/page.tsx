@@ -4,15 +4,15 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AddLabel from '@/app/components/AddLabel';
-
+import { Topic } from '@/app/models/Topic';
 const SettingsPage = () => {
   const { id } = useParams();
-  const [topic, setTopic] = useState(null);
+  const [topic, setTopic] = useState<Topic | null>(null);
   const params = useParams();
   const [children, setChildren] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [parent, setParent] = useState(null);
+  const [parent, setParent] = useState<any | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -60,7 +60,7 @@ const SettingsPage = () => {
     }
   };
 
-  const updateTopicTitle = async (topicId, newTitle) => {
+  const updateTopicTitle = async (topicId:any, newTitle:any) => {
     console.log("1 Updating topic: ", topicId);
     if (!confirm("Are you sure you want to update this topic's title?")) {
       return;
@@ -122,7 +122,7 @@ const SettingsPage = () => {
     }
   };
 
-  const fetchParent = async (topicId) => {
+  const fetchParent = async (topicId:any) => {
     try {
       const response = await fetch(`/api/topics/topic?topicId=${topicId}`, {
         method: 'GET',
@@ -141,7 +141,7 @@ const SettingsPage = () => {
   };
 
 
-  const fetchChildren = async (topicId) => {
+  const fetchChildren = async (topicId:any) => {
     try {
       const response = await fetch(`/api/topics/children?parentId=${topicId}`, {
         method: 'GET',
@@ -179,7 +179,7 @@ const SettingsPage = () => {
 
  
 
-  const handleAddChild = async (childId, parentId) => {
+  const handleAddChild = async (childId:any, parentId:any) => {
     try {
       const response = await fetch(`/api/topics/addChild`, {
         method: 'POST',
@@ -203,11 +203,11 @@ const SettingsPage = () => {
     }
   };
 
-  const shareTopic = async (topicId) => {
+  const shareTopic = async (topicId:any) => {
     console.log("Sharing topic: ", topicId);
   }
 
-  const handleRemoveChild = async (childId, parentId) => {
+  const handleRemoveChild = async (childId:any, parentId:any) => {
     if (!confirm("Are you sure you want to remove this child topic from its parent? This action cannot be undone.")) {
       return;
     }
@@ -302,7 +302,7 @@ const SettingsPage = () => {
   <h3 className="font-semibold text-lg mb-2">Children Topics:</h3>
   {children.length > 0 ? (
   <ul className="list-disc pl-5">
-    {children.map((child) => (
+    {children.map((child:any) => (
       <li key={child.id} className="flex justify-between mb-1">
         {/* Wrap the child title in a Link component */}
         <Link href={`../${child.id}`} passHref>
@@ -333,11 +333,11 @@ const SettingsPage = () => {
         className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
       <ul className="list-none">
-        {searchResults.map(result => (
+        {searchResults.map((result:any) => (
           <li key={result.id} className="flex justify-between items-center mb-2">
             <span className="mr-2">{result.title}</span>
             <button
-              onClick={() => handleAddChild(result.id, topic.id)}
+              onClick={() => handleAddChild(result.id, topic?.id)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               Add

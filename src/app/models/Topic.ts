@@ -5,4 +5,5 @@ export interface Topic {
   createdAt?: Date;
   updatedAt?: Date;
   lastAccessed: string;
+  parentId?: string
 }

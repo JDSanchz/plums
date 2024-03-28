@@ -9,7 +9,7 @@ const SettingsPage = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState<Topic | null>(null);
   const params = useParams();
-  const [children, setChildren] = useState([]);
+  const [children, setChildren] = useState<any>();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [parent, setParent] = useState<any | null>(null);
@@ -33,7 +33,7 @@ const SettingsPage = () => {
     }
   }, [searchTerm]);
 
-  const deleteTopic = async (topicId: any) => {
+  const deleteTopic = async (topicId:any) => {
     console.log("1 Deleting topic: ", topicId);
     if (!confirm("Are you sure you want to delete this topic? This action cannot be undone.")) {
       return;
@@ -322,9 +322,10 @@ const SettingsPage = () => {
   )}
 </div>
   </div>
-  <div>
+  <div className='flex flex-col md:flex-row w-full'>
+   
+    <div className="flex flex-col space-y-4 p-4 grow">
     <h3 className="font-semibold text-lg mb-2">Add New Child Topic:</h3>
-    <div className="flex flex-col space-y-4">
       <input
         type="text"
         value={searchTerm}
@@ -346,7 +347,7 @@ const SettingsPage = () => {
         ))}
       </ul>
     </div>
-    <div>
+    <div className="grow">
       <AddLabel />
     </div>
   </div>

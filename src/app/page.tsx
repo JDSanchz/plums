@@ -1,8 +1,28 @@
+'use client'
 import Image from "next/image";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useEffect } from "react";
 
 
 export default function Home() {
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
+  // Redirect to dashboard if a user is found once loading is complete
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace("/dashboard");
+    }
+  }, [user, isLoading, router]);
+  if (isLoading) {
+    return (
+      <div className="mt-8 w-full flex flex-col items-center justify-center text-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      <p className="mt-3 text-2xl">Loading...</p>
+    </div>)
+  }
+
   return (
     <div className="mt-8 w-full flex flex-col items-center justify-center text-center">
       <Head>
@@ -12,14 +32,12 @@ export default function Home() {
       </Head>
 
       <main className="flex flex-1 flex-col items-center justify-center w-full px-20 text-black">
-        <h1 className="text-6xl font-bold">
-          Welcome to <span className="text-purple-600">PLUMS</span>
-        </h1>
-        <p className="mt-3 text-2xl">
-          Your personal space for{" "}
-          <span className="text-purple-600">learning management</span>.
-        </p>
-
+          <><h1 className="text-6xl font-bold">
+              Welcome to <span className="text-purple-600">PLUMS</span>
+            </h1><p className="mt-3 text-2xl">
+                Your personal space for{" "}
+                <span className="text-purple-600">learning management</span>.
+              </p></>
         <div className="mt-6">
           <a
             href="/dashboard"

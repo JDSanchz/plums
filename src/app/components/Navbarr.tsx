@@ -147,7 +147,7 @@ const Navbar = () => {
           {user ? user?.name?.[0]?.toUpperCase() : 'X'}
         </div>
         {/* Display the user's name or a default message */}
-        <span>{user ? `${user.name.split('@')[0].slice(0, 6)}'s space` : "User's space"}</span>
+        <span>{user ? `${user?.name?.split('@')[0].slice(0, 6)}'s space` : "User's space"}</span>
         <button
           onClick={toggleMenuVisibility}
           className="ml-auto cursor-pointer border-none bg-transparent md:hidden"

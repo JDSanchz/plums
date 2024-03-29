@@ -9,7 +9,7 @@ const SettingsPage = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState<Topic | null>(null);
   const params = useParams();
-  const [children, setChildren] = useState<any>();
+  const [children, setChildren] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [parent, setParent] = useState<any | null>(null);
@@ -22,7 +22,7 @@ const SettingsPage = () => {
   useEffect(() => {
     fetchTopic(id);
     fetchChildren(id);
-  },[])
+  }, [id]);
   // }, [id,children]); Removed this line because it was making too many requests - Ronald
  
   useEffect(() => {

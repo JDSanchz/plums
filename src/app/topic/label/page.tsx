@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 
 
 export default function LabelPage() {
@@ -12,6 +12,7 @@ export default function LabelPage() {
     const [newLabel, setNewLabel] = useState('');
     const [editMode, setEditMode] = useState<string | null>(null);
     const [editLabel, setEditLabel] = useState('');
+    const router = useRouter();
 
     interface Label {
       id: string;
@@ -20,7 +21,6 @@ export default function LabelPage() {
       updatedAt: Date;
       topicId: number;
     }
-    
 
 
       // Fetch all labels
@@ -41,6 +41,7 @@ export default function LabelPage() {
       useEffect(() => {
         fetchLabels();
       }, [setLabels]);
+
 
       const handleTopicDelete = async (labelId: any) => {
         //Delete the topic when the delete button is clicked
@@ -111,8 +112,6 @@ export default function LabelPage() {
         }
       }
       
-
-
     return (
         <div className="p-4">
             <p className="font-semibold">Labels currently logged</p>
@@ -188,33 +187,6 @@ export default function LabelPage() {
                 :(
                   <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => {setEditMode(Label.id); }}> Edit Label </button>
                 )}
-            {/* {editMode !== Label.id ? (
-              
-            <button 
-            className="ml-4 px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600" 
-            onClick={() => handleTopicDelete(Label.id)}
-            >
-            <svg  
-              xmlns="http://www.w3.org/2000/svg"  
-              width="24"  
-              height="24"  
-              viewBox="0 0 24 24"  
-              fill="none"  
-              stroke="currentColor"  
-              stroke-width="1.25"  
-              stroke-linecap="round"  
-              stroke-linejoin="round"  
-              className="icon icon-tabler icons-tabler-outline icon-tabler-backspace"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5z" />
-                <path d="M12 10l4 4m0 -4l-4 4" />
-                </svg>
-                </button>
-            ) ? (
-            <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => updateLabelTitle(Label.id) }> Edit Label </button> 
-            ) : " " :""} */}
-
             </div>
             </Link>
         </React.Fragment>

@@ -115,8 +115,8 @@ export default function NewTopicInput({ newInput }: Props) {
         </div>
       )}
       {!isInput && (
-        <a
-          href="#"
+        <div
+          
           className="mt-1 flex gap-2 items-center cursor-pointer text-sm hover:underline"
           onClick={() => setIsInput(!isInput)}
         >
@@ -140,7 +140,7 @@ export default function NewTopicInput({ newInput }: Props) {
             </svg>
           </span>
           Create New Topic
-        </a>
+        </div>
       )}
     </div>
   );

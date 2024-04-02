@@ -142,11 +142,19 @@ const Navbar = () => {
   className={`w-full md:w-[310px] flex flex-col ${pathname === "/" ? "bg-gray-50" : "bg-gray-100"} text-gray-900 ${pathname === "/" ? "hidden" : ""}`}
 >
   <div className={`flex items-center ${user ? "bg-purple-600" : "bg-gray-400"} p-4 text-white`}>
-    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
-      {user ? user.name?.[0].toUpperCase() : (
-        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-login"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M21 12h-13l3 -3" /><path d="M11 15l-3 -3" /></svg>
-      )}
-    </div>
+  {user ? (
+  <a href="/dashboard" className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
+    {user.name?.[0]?.toUpperCase()}
+  </a>
+) : (
+  <a href="/api/auth/login" className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-login">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
+      <path d="M21 12h-13l3 -3m0 6l-3 -3"/>
+    </svg>
+  </a>
+)}
     <span>{user ? `${user.name?.split('@')[0].slice(0, 6)}'s space` : "User's space"}</span>
         <button
           onClick={toggleMenuVisibility}

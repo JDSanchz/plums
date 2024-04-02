@@ -30,6 +30,7 @@ const SettingsPage = () => {
   useEffect(() => {
     if (searchTerm !== '') {
       handleSearch();
+      console.log("Search results: ", searchResults);
     } else {
       setSearchResults([]);
     }
@@ -323,8 +324,7 @@ const SettingsPage = () => {
         className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
       <ul className="list-none">
-        {searchResults.filter((result: any) => result.auth0_user_id === user?.sub)
-               .map((result: any) => (
+        {searchResults.map((result: any) => (
           <li key={result.id} className="flex justify-between items-center mb-2">
             <span className="mr-2">{result.title}</span>
             <button

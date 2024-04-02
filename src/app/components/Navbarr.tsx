@@ -231,7 +231,7 @@ const Navbar = () => {
           <Link href={`/topic/${topic.id}`}>
             <div
               className={`flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
-              onClick={() => handleTopicClick(topic.id)}>
+              onClick={() => {handleTopicClick(topic.id), toggleMenuVisibility()}}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-library"

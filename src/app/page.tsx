@@ -41,12 +41,12 @@ export default function Home() {
                 <span className="text-purple-600">learning management</span>.
               </p></>
         <div className="mt-6">
-          <a
-            href="/dashboard"
-            className="px-6 py-3 bg-purple-600 text-white font-bold rounded-md hover:bg-purple-700 transition duration-200 ease-in-out"
-          >
-            Discover Features
-          </a>
+        <a
+  href="/dashboard"
+  className="px-4 py-3 sm:px-6 sm:py-3 bg-purple-600 text-white font-bold rounded-md hover:bg-purple-700 transition duration-200 ease-in-out text-xs sm:text-sm"
+>
+  Discover Features
+</a>
         </div>
 
         <div className="mt-8 max-w-4xl mx-auto">

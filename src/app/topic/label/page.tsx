@@ -229,7 +229,7 @@ export default function LabelPage() {
       <div>
       {/* Section to add labels */}
             <div className="mt-4">
-                <p className="font-semibold"> Create new Label </p>
+                <p className="font-semibold mb-2"> Create new Label </p>
                 <input
                 placeholder="Enter label name"
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -242,12 +242,12 @@ export default function LabelPage() {
                 </div>
             </div>    
         </div>
-        <h3 className="text-lg font-semibold mb-2">Topics with this label:</h3>
+        <h3 className="text-lg font-semibold mb-2 mt-4 ">Topics with this label:</h3>
             <div className='max-h-[250px] overflow-y-scroll p-3 border rounded max-w-[600px]'>
               {topics?.map((topic:any)=> {
                 return(
                   <div key={topic?.id} 
-                  className="flex justify-between mb-1 hover:bg-gray-50 cursor-pointer p-2">
+                  className="flex justify-between mb-1 hover:bg-gray-200 cursor-pointer p-2">
                     <a href={`/topic/${topic?.id}`}>{topic?.title}</a>
                   </div>
                 )

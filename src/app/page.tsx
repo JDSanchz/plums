@@ -4,6 +4,8 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect } from "react";
+import effort from "../app/img/effort.png";
+import topics from "../app/img/topics.png";
 
 
 export default function Home() {
@@ -55,22 +57,14 @@ export default function Home() {
                 Organize your notes, files, and links into topics for easy
                 access.
               </p>
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Create Topics"
-                className="mt-2"
-              />
+              <Image src={topics} alt="Create Topics" className="mt-2" />
             </div>
             <div className="bg-white shadow-md rounded-lg p-6">
               <h2 className="font-semibold text-lg">Add Resources</h2>
               <p>
                 Effortlessly add notes, files, images, and links to your topics.
               </p>
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Add Resources"
-                className="mt-2"
-              />
+              <Image src={effort} alt="Create Topics" className="mt-2" />
             </div>
           </div>
         </div>

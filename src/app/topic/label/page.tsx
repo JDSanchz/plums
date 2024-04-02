@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';

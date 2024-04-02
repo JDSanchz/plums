@@ -8,9 +8,11 @@ import { useRouter } from 'next/navigation';
 
 export default function LabelPage() {
     const { id:currentLabelId } = useParams();
+    const [labelId, setLabelId] = useState<string | null>(null);
     const [Labels, setLabels] = useState<Label[]>([]);
     const [newLabel, setNewLabel] = useState('');
     const [editMode, setEditMode] = useState<string | null>(null);
+    const [topics, setTopics] = useState([]);
     const [editLabel, setEditLabel] = useState('');
     const router = useRouter();
 
@@ -84,6 +86,36 @@ export default function LabelPage() {
         }
       }
 
+      const fetchTopicWhereLabel = async (labelId: any) => {
+        try {
+          const response = await fetch(`/api/topics/label?labelId=${labelId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setTopics(data);
+        } catch (error) {
+          console.error("Could not fetch the topic: ", error);
+        }
+      };
+
+      useEffect(() => {
+        try{
+          if(labelId){
+            fetchTopicWhereLabel(labelId)
+            console.log("sound")
+          }
+        } catch (error) {
+          console.error("Could not fetch the topic: ", error);
+        }
+      }, [labelId]);
+      console.log(topics)
+
 
 
       const createNewLabel = async (newLabel: string) => {
@@ -126,7 +158,7 @@ export default function LabelPage() {
               <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
               {Labels?.map((Label) => (
         <React.Fragment key={Label.id}>
-          <Link href={`/topic/label`}>
+          <a onClick={() => setLabelId(Label.id) }>
             <div className="flex gap-1 border rounded p-1 pl-2 text-sm">
             <div
               className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${Label.id === currentLabelId ? 'bg-purple-300' : ''}`}
@@ -188,7 +220,7 @@ export default function LabelPage() {
                   <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => {setEditMode(Label.id); }}> Edit Label </button>
                 )}
             </div>
-            </Link>
+            </a>
         </React.Fragment>
           ))}
         </div>
@@ -208,6 +240,17 @@ export default function LabelPage() {
                 </div>
             </div>    
         </div>
+        <h3 className="text-lg font-semibold mb-2">Topics with this label:</h3>
+            <div className='max-h-[250px] overflow-y-scroll p-3 border rounded max-w-[600px]'>
+              {topics?.map((topic:any)=> {
+                return(
+                  <div key={topic?.id} 
+                  className="flex justify-between mb-1 hover:bg-gray-50 cursor-pointer p-2">
+                    <a href={`/topic/${topic?.id}`}>{topic?.title}</a>
+                  </div>
+                )
+              })}
+            </div>
     </div>
     )}
     

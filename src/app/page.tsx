@@ -33,7 +33,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-1 flex-col items-center justify-center w-full px-20 text-black">
+      <main className="flex flex-1 flex-col items-center justify-center w-full px-4 sm:px-20 text-black">
           <><h1 className="text-6xl font-bold">
               Welcome to <span className="text-purple-600">PLUMS</span>
             </h1><p className="mt-3 text-2xl">

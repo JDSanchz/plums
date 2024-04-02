@@ -222,7 +222,7 @@ const Navbar = () => {
         <React.Fragment key={topic.id}>
           <Link href={`/topic/${topic.id}`}>
             <div
-              className={`block flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
+              className={`flex gap-2 p-1 pl-2 text-sm hover:bg-purple-100 ${topic.id === currentTopicId ? 'bg-purple-300' : ''}`}
               onClick={() => handleTopicClick(topic.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -261,11 +261,11 @@ const Navbar = () => {
             )}
             
             {user ? (
-                          <div className="py-0 pl-4 mb-2">
+                          <div className="hidden md:block  py-0 pl-4 mb-2">
                           <NewTopicInput newInput={setNewInput} />
                         </div>
             ) : (
-<></>
+              <></>
             )}
             {user ? (
         <a href="/api/auth/logout" className="flex items-center p-4 hover:bg-gray-200">

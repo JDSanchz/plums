@@ -1,32 +1,21 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { lastAccessed } from "@/app/components/services/recents";
 import { useParams } from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 export default function LabelPage() {
-    const { id:currentTopicId } = useParams();
     const { id:currentLabelId } = useParams();
-    const [topics, setTopics] = useState<Topic[]>([]);
+    const [labelId, setLabelId] = useState<string | null>(null);
     const [Labels, setLabels] = useState<Label[]>([]);
     const [newLabel, setNewLabel] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
-    const [editTitle, setEditTitle] = useState('');
-    const [selectedLabelId, setSelectedLabelId] = useState<Label | null>(null);
-
-
-    interface Topic {
-      id: string;
-      title: string;
-      parentId: string;
-      lastAccessed: string;
-      createdAt: string;
-      updatedAt: string;
-      children: Topic[];
-    }
+    const [editMode, setEditMode] = useState<string | null>(null);
+    const [topics, setTopics] = useState([]);
+    const [editLabel, setEditLabel] = useState('');
+    const {user} = useUser();
+    const router = useRouter();
 
     interface Label {
       id: string;
@@ -35,7 +24,6 @@ export default function LabelPage() {
       updatedAt: Date;
       topicId: number;
     }
-    
 
 
       // Fetch all labels
@@ -57,6 +45,7 @@ export default function LabelPage() {
         fetchLabels();
       }, [setLabels]);
 
+
       const handleTopicDelete = async (labelId: any) => {
         //Delete the topic when the delete button is clicked
         try {
@@ -72,27 +61,62 @@ export default function LabelPage() {
         }
       };
 
-      const updateLabelTitle = async (labelId: any, newTitle: string) => {
-        if (!confirm("Are you sure you want to update this label's title?")) {
-          return;
-        }
-
+      const updateLabelTitle = async (id:string) => {
         try {
-          const response = await fetch(`/api/labels/${labelId}`, {
+          const response = await fetch(`/api/labels/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ title: newTitle }),
+            body: JSON.stringify({ title: editLabel }),
           });
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          fetchLabels();
+          setEditMode(null);
+          setEditLabel('');
+          const updatedLabels = Labels.map((label) => {
+            if (label.id === id) {
+              return { ...label, title: editLabel };
+            }
+            return label;
+          });
+          setLabels(updatedLabels);
         } catch (error) {
           console.error("Failed to update label:", error);
         }
       }
+
+      const fetchTopicWhereLabel = async (labelId: any) => {
+        try {
+          const response = await fetch(`/api/topics/label?labelId=${labelId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          const filteredData = data.filter((item: any) => item.auth0_user_id === user?.sub);
+          setTopics(filteredData);
+        } catch (error) {
+          console.error("Could not fetch the topic: ", error);
+        }
+      };
+
+      useEffect(() => {
+        try{
+          if(labelId){
+            fetchTopicWhereLabel(labelId)
+            console.log("sound")
+          }
+        } catch (error) {
+          console.error("Could not fetch the topic: ", error);
+        }
+      }, [labelId]);
+      console.log(topics)
 
 
 
@@ -122,8 +146,6 @@ export default function LabelPage() {
         }
       }
       
-
-
     return (
         <div className="p-4">
             <p className="font-semibold">Labels currently logged</p>
@@ -138,11 +160,10 @@ export default function LabelPage() {
               <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
               {Labels?.map((Label) => (
         <React.Fragment key={Label.id}>
-          <Link href={`/topic/label`}>
+          <a onClick={() => setLabelId(Label.id) }>
             <div className="flex gap-1 border rounded p-1 pl-2 text-sm">
             <div
               className={`flex gap-2 p-1 pl-2 text-sm border hover:bg-purple-100 ${Label.id === currentLabelId ? 'bg-purple-300' : ''}`}
-              // onClick={() => handleTopicDelete(Label.id)}
               >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +184,15 @@ export default function LabelPage() {
                 <path d="M11 10h6" />
                 <path d="M11 13h3" />
               </svg>
+              {editMode === Label.id ? (
+                <input
+                  type="text"
+                  value={editLabel}
+                  onChange={(e) => setEditLabel(e.target.value)}
+                />
+              ) : (
               <p className="truncate">{Label.title}</p>
+              )}
 
             </div> 
             <button 
@@ -187,10 +216,13 @@ export default function LabelPage() {
                 <path d="M12 10l4 4m0 -4l-4 4" />
                 </svg>
                 </button>
-
-                <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"> Edit Label </button>
+                {editMode === Label.id ? (
+                  <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={()=> updateLabelTitle(Label.id)}>Update Label</button>)
+                :(
+                  <button className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={() => {setEditMode(Label.id); }}> Edit Label </button>
+                )}
             </div>
-            </Link>
+            </a>
         </React.Fragment>
           ))}
         </div>
@@ -210,152 +242,17 @@ export default function LabelPage() {
                 </div>
             </div>    
         </div>
+        <h3 className="text-lg font-semibold mb-2">Topics with this label:</h3>
+            <div className='max-h-[250px] overflow-y-scroll p-3 border rounded max-w-[600px]'>
+              {topics?.map((topic:any)=> {
+                return(
+                  <div key={topic?.id} 
+                  className="flex justify-between mb-1 hover:bg-gray-50 cursor-pointer p-2">
+                    <a href={`/topic/${topic?.id}`}>{topic?.title}</a>
+                  </div>
+                )
+              })}
+            </div>
     </div>
     )}
     
-// import React, { useEffect, useState } from "react";
-// import Link from "next/link";
-// import { lastAccessed } from "@/app/components/services/recents";
-// import { useParams } from 'next/navigation';
-
-// interface Label {
-//   id: string;
-//   title: string;
-//   createdAt: Date;
-//   updatedAt: Date;
-//   topicId: number;
-// }
-
-// export default function LabelPage() {
-//   const { id: currentTopicId } = useParams();
-//   const [labels, setLabels] = useState<Label[]>([]);
-//   const [newLabel, setNewLabel] = useState('');
-//   const [isEditing, setIsEditing] = useState(false);
-//   const [editTitle, setEditTitle] = useState('');
-//   const [selectedLabelId, setSelectedLabelId] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     fetchLabels();
-//   }, []);
-
-//   // Fetch all labels
-//   const fetchLabels = async () => {
-//     try {
-//       const response = await fetch("/api/labels");
-//       if (!response.ok) {
-//         throw new Error(`Error: ${response.status}`);
-//       }
-//       const data = await response.json();
-//       const sortedData = data.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-//       setLabels(sortedData);
-//     } catch (error) {
-//       console.error("Failed to fetch labels:", error);
-//     }
-//   };
-
-//   const handleTopicDelete = async (labelId: string) => {
-//     // Delete the label when the delete button is clicked
-//     try {
-//       const response = await fetch(`/api/labels/${labelId}`, {
-//         method: "DELETE",
-//       });
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//       }
-//       fetchLabels();
-//     } catch (error) {
-//       console.error("Failed to delete label:", error);
-//     }
-//   };
-
-//   const handleEditLabel = (labelId: string, currentTitle: string) => {
-//     // Set the state to start editing and set the current title
-//     setSelectedLabelId(labelId);
-//     setEditTitle(currentTitle);
-//     setIsEditing(true);
-//   };
-
-//   const updateLabelTitle = async (labelId: string, newTitle: string) => {
-//     if (!confirm("Are you sure you want to update this label's title?")) {
-//       return;
-//     }
-
-//     try {
-//       const response = await fetch(`/api/labels/${labelId}`, {
-//         method: "PUT",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ title: newTitle }),
-//       });
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//       }
-//       fetchLabels();
-//       setIsEditing(false);
-//     } catch (error) {
-//       console.error("Failed to update label:", error);
-//     }
-//   };
-
-//   const createNewLabel = async (newLabel: string) => {
-//     try {
-//       const response = await fetch("/api/labels", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           title: newLabel
-//         })
-//       });
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//       }
-//       fetchLabels();
-//     } catch (error) {
-//       console.error("Failed to create label:", error);
-//     }
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <p className="font-semibold">Labels currently logged</p>
-//       {/* Display labels */}
-//       <div className="mt-2 max-h-60 overflow-auto flex flex-wrap gap-2">
-//         {labels.map((label) => (
-//           <div key={label.id} className="flex gap-1 border rounded p-1 pl-2 text-sm">
-//             <p className="truncate">{label.title}</p>
-//             {isEditing && selectedLabelId === label.id ? (
-//               <>
-//                 <input
-//                   type="text"
-//                   value={editTitle}
-//                   onChange={(e) => setEditTitle(e.target.value)}
-//                 />
-//                 <button onClick={() => updateLabelTitle(label.id, editTitle)}>Save</button>
-//               </>
-//             ) : (
-//               <>
-//                 <button onClick={() => handleEditLabel(label.id, label.title)}>Edit</button>
-//                 <button onClick={() => handleTopicDelete(label.id)}>Delete</button>
-//               </>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-//       {/* Section to add labels */}
-//       <div className="mt-4">
-//         <p className="font-semibold">Create new Label</p>
-//         <input
-//           placeholder="Enter label name"
-//           value={newLabel}
-//           onChange={(e) => setNewLabel(e.target.value)}
-//           type="text"
-//           required
-//         />
-//         <button onClick={() => createNewLabel(newLabel)}>Add</button>
-//       </div>
-//     </div>
-//   );
-// }

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 export default function LabelPage() {
@@ -14,6 +15,7 @@ export default function LabelPage() {
     const [editMode, setEditMode] = useState<string | null>(null);
     const [topics, setTopics] = useState([]);
     const [editLabel, setEditLabel] = useState('');
+    const {user} = useUser();
     const router = useRouter();
 
     interface Label {
@@ -98,7 +100,8 @@ export default function LabelPage() {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
-          setTopics(data);
+          const filteredData = data.filter((item: any) => item.auth0_user_id === user?.sub);
+          setTopics(filteredData);
         } catch (error) {
           console.error("Could not fetch the topic: ", error);
         }

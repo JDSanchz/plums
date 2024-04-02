@@ -138,16 +138,16 @@ const Navbar = () => {
 
 
   return  (
-    <div
-      className={`w-full md:w-[310px] flex flex-col bg-gray-100 text-gray-900 ${pathname === "/" ? "hidden" : ""}`}
-    >
-      <div className="flex items-center bg-purple-600 p-4 text-white">
-        {/* Display the user's initial or a default letter */}
-        <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
-          {user ? user?.name?.[0]?.toUpperCase() : 'X'}
-        </div>
-        {/* Display the user's name or a default message */}
-        <span>{user ? `${user?.name?.split('@')[0].slice(0, 6)}'s space` : "User's space"}</span>
+<div
+  className={`w-full md:w-[310px] flex flex-col ${pathname === "/" ? "bg-gray-50" : "bg-gray-100"} text-gray-900 ${pathname === "/" ? "hidden" : ""}`}
+>
+  <div className={`flex items-center ${user ? "bg-purple-600" : "bg-gray-400"} p-4 text-white`}>
+    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-purple-600">
+      {user ? user.name?.[0].toUpperCase() : (
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-login"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M21 12h-13l3 -3" /><path d="M11 15l-3 -3" /></svg>
+      )}
+    </div>
+    <span>{user ? `${user.name?.split('@')[0].slice(0, 6)}'s space` : "User's space"}</span>
         <button
           onClick={toggleMenuVisibility}
           className="ml-auto cursor-pointer border-none bg-transparent md:hidden"
@@ -277,13 +277,13 @@ const Navbar = () => {
           Logout
         </a>
       ) : (
-        <a href="/api/auth/login" className="flex items-center p-4 hover:bg-blue-700 bg-blue-600 text-white">
+        <a href="/api/auth/login" className="flex items-center p-4 hover:bg-blue-200 bg-blue-100 text-blue-700">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-user mr-2">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
             <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
             <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
           </svg>
-          Login  👈
+          Login
         </a>
       )}
             <Link href={`/topic/label/`} className="flex items-center p-4 hover:bg-gray-200">

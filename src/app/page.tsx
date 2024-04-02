@@ -49,25 +49,29 @@ export default function Home() {
 </a>
         </div>
 
-        <div className="mt-8 max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white shadow-md rounded-lg p-6">
-              <h2 className="font-semibold text-lg">Create Topics</h2>
-              <p>
-                Organize your notes, files, and links into topics for easy
-                access.
-              </p>
-              <Image src={topics} alt="Create Topics" className="mt-2" />
-            </div>
-            <div className="bg-white shadow-md rounded-lg p-6">
-              <h2 className="font-semibold text-lg">Add Resources</h2>
-              <p>
-                Effortlessly add notes, files, images, and links to your topics.
-              </p>
-              <Image src={effort} alt="Create Topics" className="mt-2" />
-            </div>
-          </div>
-        </div>
+        <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+    <div className="bg-white shadow-lg hover:shadow-xl rounded-lg p-4 sm:p-6 transition-shadow duration-200 ease-in-out">
+      <h2 className="font-semibold text-xl text-gray-800">Create Topics</h2>
+      <p className="mt-2 text-gray-600">
+        Organize your notes, files, and links into topics for easy access.
+      </p>
+      <div className="mt-4">
+        <Image src={topics} alt="Create Topics" className="max-w-full h-auto rounded-md" />
+      </div>
+    </div>
+    <div className="bg-white shadow-lg hover:shadow-xl rounded-lg p-4 sm:p-6 transition-shadow duration-200 ease-in-out">
+      <h2 className="font-semibold text-xl text-gray-800">Add Resources</h2>
+      <p className="mt-2 text-gray-600">
+        Effortlessly add notes, files, images, and links to your topics.
+      </p>
+      <div className="mt-4">
+        <Image src={effort} alt="Add Resources" className="max-w-full h-auto rounded-md" />
+      </div>
+    </div>
+  </div>
+</div>
+
       </main>
     </div>
   );

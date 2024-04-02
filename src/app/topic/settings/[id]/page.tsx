@@ -174,7 +174,8 @@ const SettingsPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setSearchResults(data);
+      const filteredData = data.filter((item: any) => item.auth0_user_id === user?.sub);
+      setSearchResults(filteredData);
     } catch (error) {
       console.error("Could not search topics: ", error);
     }

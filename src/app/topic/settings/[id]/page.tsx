@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AddLabel from '@/app/components/AddLabel';
 import { Topic } from '@/app/models/Topic';
+import { useUser } from '@auth0/nextjs-auth0/client';
 const SettingsPage = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState<Topic | null>(null);
@@ -16,6 +17,7 @@ const SettingsPage = () => {
   const [editTitle, setEditTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
+  const { user, error, isLoading } = useUser();
 
 
 
@@ -28,6 +30,7 @@ const SettingsPage = () => {
   useEffect(() => {
     if (searchTerm !== '') {
       handleSearch();
+      console.log("Search results: ", searchResults);
     } else {
       setSearchResults([]);
     }
@@ -171,7 +174,8 @@ const SettingsPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setSearchResults(data);
+      const filteredData = data.filter((item: any) => item.auth0_user_id === user?.sub);
+      setSearchResults(filteredData);
     } catch (error) {
       console.error("Could not search topics: ", error);
     }
@@ -202,11 +206,6 @@ const SettingsPage = () => {
       console.error("Could not add child topic: ", error);
     }
   };
-
-  const shareTopic = async (topicId:any) => {
-    console.log("Sharing topic: ", topicId);
-  }
-
   const handleRemoveChild = async (childId:any, parentId:any) => {
     if (!confirm("Are you sure you want to remove this child topic from its parent? This action cannot be undone.")) {
       return;
@@ -277,14 +276,6 @@ const SettingsPage = () => {
         Delete Topic
       </button>
     )}
-        {topic && !isEditing && (
-      <button
-        onClick={() => shareTopic(topic.id)}
-        className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-      >
-        Share
-      </button>
-    )}
   </div>
   <hr className="mb-4 mt-4" />
    {/* Parent Topic Section */}
@@ -334,7 +325,7 @@ const SettingsPage = () => {
         className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
       <ul className="list-none">
-        {searchResults.map((result:any) => (
+        {searchResults.map((result: any) => (
           <li key={result.id} className="flex justify-between items-center mb-2">
             <span className="mr-2">{result.title}</span>
             <button
